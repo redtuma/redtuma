@@ -5,9 +5,14 @@
   "license": "Apache-2.0",
   "type": "module",
   "sideEffects": false,
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
   "scripts": {
     "build": "tsdown",
@@ -22,5 +27,20 @@
   "devDependencies": {
     "@electric-sql/pglite": "^0.2.0",
     "@types/pg": "^8.11.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chituma-ai/chituma.git",
+    "directory": "stores/pg"
+  },
+  "homepage": "https://chituma.ai",
+  "bugs": "https://github.com/chituma-ai/chituma/issues",
+  "keywords": [
+    "ai",
+    "agents",
+    "llm",
+    "typescript",
+    "chituma",
+    "vercel-ai-sdk"
+  ]
 }

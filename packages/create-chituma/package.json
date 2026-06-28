@@ -4,17 +4,38 @@
   "description": "Scaffold a new Chituma project — `npm create chituma@latest`.",
   "license": "Apache-2.0",
   "type": "module",
-  "files": ["dist", "bin"],
+  "files": [
+    "dist",
+    "bin"
+  ],
   "bin": {
     "create-chituma": "./bin/create-chituma.mjs"
   },
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
   "scripts": {
     "build": "tsdown",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist .turbo"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chituma-ai/chituma.git",
+    "directory": "packages/create-chituma"
+  },
+  "homepage": "https://chituma.ai",
+  "bugs": "https://github.com/chituma-ai/chituma/issues",
+  "keywords": [
+    "ai",
+    "agents",
+    "llm",
+    "typescript",
+    "chituma",
+    "vercel-ai-sdk"
+  ]
 }

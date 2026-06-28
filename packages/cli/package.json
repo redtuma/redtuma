@@ -4,12 +4,19 @@
   "description": "Chituma CLI: scaffold, dev server and build for Chituma projects.",
   "license": "Apache-2.0",
   "type": "module",
-  "files": ["dist", "bin", "templates"],
+  "files": [
+    "dist",
+    "bin",
+    "templates"
+  ],
   "bin": {
     "chituma": "./bin/chituma.mjs"
   },
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
   "scripts": {
     "build": "tsdown",
@@ -23,5 +30,20 @@
     "@hono/node-server": "^1.13.0",
     "cac": "^6.7.14",
     "hono": "^4.6.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chituma-ai/chituma.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://chituma.ai",
+  "bugs": "https://github.com/chituma-ai/chituma/issues",
+  "keywords": [
+    "ai",
+    "agents",
+    "llm",
+    "typescript",
+    "chituma",
+    "vercel-ai-sdk"
+  ]
 }
