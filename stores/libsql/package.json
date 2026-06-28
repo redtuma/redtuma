@@ -1,6 +1,6 @@
 {
   "name": "@chituma/store-libsql",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Chituma libSQL/SQLite store adapter.",
   "license": "Apache-2.0",
   "type": "module",

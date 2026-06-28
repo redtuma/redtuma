@@ -7,5 +7,5 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["@chituma/example-*", "@chituma/web", "@chituma/docs", "@chituma/studio"]
+  "ignore": ["@chituma/example-*", "@chituma/web"]
 }

@@ -1,6 +1,6 @@
 {
   "name": "@chituma/rag",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Chituma RAG: document chunking, embeddings and vector retrieval.",
   "license": "Apache-2.0",
   "type": "module",

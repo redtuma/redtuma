@@ -1,6 +1,6 @@
 {
   "name": "@chituma/mcp",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Chituma MCP: Model Context Protocol client and server.",
   "license": "Apache-2.0",
   "type": "module",
