@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-ink-950 text-zinc-200 antialiased;
+}
+
+.gradient-ember {
+  background-image: linear-gradient(135deg, #ff7849 0%, #f9603a 50%, #e44a26 100%);
+}
+
+.text-gradient {
+  background: linear-gradient(120deg, #fff 20%, #ff7849 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.glow {
+  box-shadow: 0 0 80px -20px rgba(249, 96, 58, 0.45);
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}

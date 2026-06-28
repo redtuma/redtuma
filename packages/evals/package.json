@@ -1,0 +1,22 @@
+{
+  "name": "@chituma/evals",
+  "version": "0.0.1",
+  "description": "Chituma evals: scorers and an evaluation harness for agent quality.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "files": ["dist"],
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "@chituma/core": "workspace:*",
+    "zod": "^3.24.0"
+  }
+}

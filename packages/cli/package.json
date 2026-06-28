@@ -1,0 +1,27 @@
+{
+  "name": "chituma",
+  "version": "0.0.1",
+  "description": "Chituma CLI: scaffold, dev server and build for Chituma projects.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "files": ["dist", "bin", "templates"],
+  "bin": {
+    "chituma": "./bin/chituma.mjs"
+  },
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "@chituma/core": "workspace:*",
+    "@chituma/deployer": "workspace:*",
+    "@hono/node-server": "^1.13.0",
+    "cac": "^6.7.14",
+    "hono": "^4.6.0"
+  }
+}

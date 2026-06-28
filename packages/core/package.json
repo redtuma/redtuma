@@ -1,0 +1,59 @@
+{
+  "name": "@chituma/core",
+  "version": "0.0.1",
+  "description": "Chituma core: the Chituma registry, Agent, tools, model routing and workflow engine.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./agent": {
+      "types": "./dist/agent/index.d.ts",
+      "import": "./dist/agent/index.js"
+    },
+    "./tools": {
+      "types": "./dist/tools/index.d.ts",
+      "import": "./dist/tools/index.js"
+    },
+    "./workflows": {
+      "types": "./dist/workflows/index.d.ts",
+      "import": "./dist/workflows/index.js"
+    },
+    "./llm": {
+      "types": "./dist/llm/index.d.ts",
+      "import": "./dist/llm/index.js"
+    },
+    "./store": {
+      "types": "./dist/store/index.d.ts",
+      "import": "./dist/store/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "ai": "^4.3.0",
+    "zod": "^3.24.0"
+  },
+  "peerDependencies": {
+    "@ai-sdk/anthropic": "^1.2.0",
+    "@ai-sdk/openai": "^1.3.0"
+  },
+  "peerDependenciesMeta": {
+    "@ai-sdk/anthropic": { "optional": true },
+    "@ai-sdk/openai": { "optional": true }
+  },
+  "devDependencies": {
+    "@ai-sdk/anthropic": "^1.2.0",
+    "@ai-sdk/openai": "^1.3.0",
+    "@ai-sdk/provider": "^1.1.0"
+  }
+}

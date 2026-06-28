@@ -1,0 +1,22 @@
+{
+  "name": "@chituma/store-libsql",
+  "version": "0.0.1",
+  "description": "Chituma libSQL/SQLite store adapter.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "files": ["dist"],
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "@chituma/core": "workspace:*",
+    "@libsql/client": "^0.14.0"
+  }
+}

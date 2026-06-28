@@ -1,0 +1,22 @@
+{
+  "name": "@chituma/deployer",
+  "version": "0.0.1",
+  "description": "Chituma deployer: Hono server adapter exposing agents and workflows over HTTP.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "files": ["dist"],
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "@chituma/core": "workspace:*",
+    "hono": "^4.6.0"
+  }
+}
