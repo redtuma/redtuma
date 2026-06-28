@@ -14,8 +14,8 @@ export function templateFiles(projectName: string): Record<string, string> {
         },
         dependencies: {
           '@ai-sdk/anthropic': '^1.2.0',
-          '@chituma/core': '^0.0.1',
-          chituma: '^0.0.1',
+          '@chituma/core': 'latest',
+          chituma: 'latest',
           zod: '^3.24.0',
         },
       },
