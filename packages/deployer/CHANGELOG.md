@@ -1,5 +1,19 @@
 # @redtuma/deployer
 
+## 0.2.0
+
+### Minor Changes
+
+- Durable workflow resume: when the `Redtuma` instance has a configured `Store`,
+  suspended runs are persisted under `wf:{id}:run:{runId}` and rehydrated on
+  `/resume`, so a run started on one instance can be resumed on another (required
+  for stateless edge deploys). Falls back to the in-process map when no storage is
+  set.
+
+### Patch Changes
+
+- Updated dependency `@redtuma/core` to `0.2.0`.
+
 ## 0.1.0
 
 ### Minor Changes
