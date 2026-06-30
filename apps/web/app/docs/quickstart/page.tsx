@@ -1,26 +1,24 @@
-import { Code, H2 } from '@/components/Code'
+import { DocArticle, H1, H2, Lead, P, C, Code, Callout, PrevNext } from '@/components/doc'
 
 export const metadata = { title: 'Quickstart — Redtuma' }
 
 export default function Quickstart() {
   return (
-    <article className="max-w-3xl">
-      <h1 className="text-4xl font-bold text-white">Quickstart</h1>
-      <p className="mt-4 text-lg leading-relaxed text-zinc-400">
-        Build a streaming, tool-calling agent in a few minutes.
-      </p>
+    <DocArticle>
+      <H1>Quickstart</H1>
+      <Lead>Build a streaming, tool-calling agent and serve it over HTTP in a few minutes.</Lead>
 
-      <H2 id="install">1. Create a project</H2>
-      <Code>{`npm create redtuma@latest my-agent
+      <H2 id="create">1. Create a project</H2>
+      <Code title="Terminal">{`npm create redtuma@latest my-agent
 cd my-agent
 npm install`}</Code>
 
       <H2 id="key">2. Add your model key</H2>
-      <p className="text-zinc-400">Redtuma reads provider keys from the environment.</p>
-      <Code>{`export ANTHROPIC_API_KEY=sk-ant-...`}</Code>
+      <P>Redtuma reads provider keys from the environment.</P>
+      <Code title="Terminal">{`export ANTHROPIC_API_KEY=sk-ant-...`}</Code>
 
       <H2 id="agent">3. Define an agent</H2>
-      <Code>{`import { Redtuma } from '@redtuma/core'
+      <Code title="src/index.ts">{`import { Redtuma } from '@redtuma/core'
 import { Agent } from '@redtuma/core/agent'
 import { createTool } from '@redtuma/core/tools'
 import { z } from 'zod'
@@ -42,22 +40,33 @@ export const agent = new Agent({
 export const redtuma = new Redtuma({ agents: { assistant: agent } })`}</Code>
 
       <H2 id="run">4. Run it</H2>
-      <Code>{`const res = await agent.generate('What is the weather in Taipei?')
+      <Code title="generate / stream">{`const res = await agent.generate('What is the weather in Taipei?')
 console.log(res.text)
 
-// or stream
+// or stream tokens
 const stream = await agent.stream('And London?')
 for await (const chunk of stream.textStream) process.stdout.write(chunk)`}</Code>
 
       <H2 id="serve">5. Serve over HTTP</H2>
-      <Code>{`import { serve } from '@hono/node-server'
+      <P>
+        <C>createHonoServer</C> exposes every registered agent and workflow as JSON routes such as{' '}
+        <C>POST /api/agents/:id/generate</C>.
+      </P>
+      <Code title="src/server.ts">{`import { serve } from '@hono/node-server'
 import { createHonoServer } from '@redtuma/deployer'
+import { redtuma } from './index'
 
 serve({ fetch: createHonoServer(redtuma).fetch, port: 3000 })`}</Code>
+      <Code title="Terminal">{`curl -X POST http://localhost:3000/api/agents/assistant/generate \\
+  -H 'content-type: application/json' \\
+  -d '{ "input": "Weather in Taipei?" }'`}</Code>
 
-      <p className="mt-10 text-zinc-400">
-        That's it — you now have a production-ready agent with tools, streaming and an HTTP API.
-      </p>
-    </article>
+      <Callout title="Going to the edge?">
+        Scaffold with <C>--template cloudflare</C> to get a Worker with Durable Object memory and a
+        one-command <C>wrangler deploy</C>. See <a href="/docs/cloudflare" className="text-ember-300 hover:underline">Cloudflare</a>.
+      </Callout>
+
+      <PrevNext current="/docs/quickstart" />
+    </DocArticle>
   )
 }

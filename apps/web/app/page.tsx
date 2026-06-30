@@ -6,7 +6,18 @@ import { Nav, Footer } from '@/components/site'
 
 const INSTALL = 'npm create redtuma@latest'
 
-const CUSTOMERS = ['Replit', 'Sanity', 'SoftBank', 'Vercel', 'Resend', 'Browserbase', 'Cloudflare', 'Neon']
+const INTEGRATIONS = [
+  'Anthropic',
+  'OpenAI',
+  'Vercel AI SDK',
+  'Cloudflare Workers',
+  'Durable Objects',
+  'Hono',
+  'OpenTelemetry',
+  'Postgres',
+  'libSQL',
+  'MCP',
+]
 
 const USE_CASES = [
   {
@@ -24,6 +35,8 @@ const USE_CASES = [
 ]
 
 const PILLARS = [
+  { k: 'Edge-native memory', d: 'Agent memory in a Cloudflare Durable Object — no database' },
+  { k: 'Adaptive routing', d: 'Cheap model first, escalate only when needed' },
   { k: 'Agents', d: 'Tool-calling loop, structured output' },
   { k: 'Workflows', d: 'Branch, parallel, loops, suspend/resume' },
   { k: 'Memory', d: 'Working, semantic & observational' },
@@ -72,14 +85,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Customers */}
+      {/* Integrations */}
       <section className="border-y border-ink-800 py-10">
         <p className="mb-8 text-center text-xs uppercase tracking-widest text-zinc-500">
-          Trusted by teams building with AI
+          Works with your stack
         </p>
         <div className="relative overflow-hidden">
           <div className="flex w-max animate-marquee gap-12 px-6 text-lg font-semibold text-zinc-600">
-            {[...CUSTOMERS, ...CUSTOMERS].map((c, i) => (
+            {[...INTEGRATIONS, ...INTEGRATIONS].map((c, i) => (
               <span key={i} className="whitespace-nowrap">{c}</span>
             ))}
           </div>
