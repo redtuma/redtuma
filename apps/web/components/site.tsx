@@ -26,7 +26,7 @@ export function Nav() {
         </nav>
         <div className="flex items-center gap-3">
           <a
-            href="https://github.com/redtuma-ai/redtuma"
+            href="https://github.com/redtuma/redtuma"
             className="text-sm text-zinc-400 hover:text-white"
           >
             GitHub
@@ -53,7 +53,7 @@ export function Footer() {
         </p>
         <div className="flex gap-6 text-sm text-zinc-400">
           <Link href="/docs" className="hover:text-white">Docs</Link>
-          <a href="https://github.com/redtuma-ai/redtuma" className="hover:text-white">GitHub</a>
+          <a href="https://github.com/redtuma/redtuma" className="hover:text-white">GitHub</a>
         </div>
       </div>
     </footer>

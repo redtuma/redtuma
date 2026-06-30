@@ -13,7 +13,7 @@ be published to the public npm registry.
 | `create-redtuma` | available (404) |
 | `@redtuma` scope | available (no such org/user yet) |
 
-If any name gets taken before you publish, rename it (e.g. `redtuma-ai` /
+If any name gets taken before you publish, rename it (e.g. `redtuma` /
 `create-redtuma-app`) and update references.
 
 ## One-time setup
@@ -22,7 +22,7 @@ If any name gets taken before you publish, rename it (e.g. `redtuma-ai` /
 2. Create an organization named **redtuma** (free, public) so the `@redtuma/*`
    scope resolves: https://www.npmjs.com/org/create
 3. Create the GitHub repo and update the `repository`/`homepage`/`bugs` URLs in
-   each `package.json` if you don't use `github.com/redtuma-ai/redtuma`.
+   each `package.json` if you don't use `github.com/redtuma/redtuma`.
 4. Log in locally:
    ```bash
    npm login

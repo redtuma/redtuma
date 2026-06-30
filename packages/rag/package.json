@@ -27,11 +27,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/redtuma-ai/redtuma.git",
+    "url": "git+https://github.com/redtuma/redtuma.git",
     "directory": "packages/rag"
   },
   "homepage": "https://redtuma.ai",
-  "bugs": "https://github.com/redtuma-ai/redtuma/issues",
+  "bugs": "https://github.com/redtuma/redtuma/issues",
   "keywords": [
     "ai",
     "agents",
