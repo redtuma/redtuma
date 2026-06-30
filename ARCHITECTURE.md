@@ -77,9 +77,11 @@ createTool({
 (`parameters`, `execute`). Redtuma tools and raw AI SDK tools both accepted.
 
 ### MessageList
-Normalizes strings / `CoreMessage` / UI messages into a canonical
-`RedtumaMessage[]` (`{ id, role, content, createdAt, threadId, resourceId }`),
-with `.add()`, `.get.all.core()` (→ AI SDK `CoreMessage[]`), `.get.all.v2()`.
+Normalizes strings / `CoreMessage` / persisted `RedtumaMessage`s into a
+canonical `RedtumaMessage[]` (`{ id, role, content, createdAt, threadId,
+resourceId }`). API: `.add(input, role = 'user')` (chainable), `.all()`
+(→ `RedtumaMessage[]`, a copy), `.toCore()` (→ AI SDK `CoreMessage[]`, drops
+redtuma-only metadata), and `.length`.
 
 ### Workflows (engine lives in core, may re-export from @redtuma/workflows)
 ```ts

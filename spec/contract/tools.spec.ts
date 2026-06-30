@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest'
 import { createTool, isToolAction, toAISDKTool, buildToolset, RuntimeContext } from '@redtuma/core'
-import type { AnyToolAction } from '@redtuma/core'
 import { z } from 'zod'
 
-// Typed as AnyToolAction — the documented type for tools held in heterogeneous
-// collections and passed to toAISDKTool/buildToolset.
-const add: AnyToolAction = createTool({
+// A concretely-typed tool must pass straight into toAISDKTool/buildToolset
+// without an explicit AnyToolAction annotation (regression guard for the
+// toAISDKTool signature).
+const add = createTool({
   id: 'add',
   description: 'Add two numbers',
   inputSchema: z.object({ a: z.number(), b: z.number() }),

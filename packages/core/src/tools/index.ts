@@ -50,7 +50,7 @@ export function isToolAction(value: unknown): value is ToolAction {
 
 /** Adapt a {@link ToolAction} into the AI SDK `tool()` shape. */
 export function toAISDKTool(
-  toolAction: ToolAction,
+  toolAction: AnyToolAction,
   runtimeContext: RuntimeContext,
 ): AiTool {
   return aiTool({
