@@ -67,3 +67,60 @@ export async function resolveModel(model: ModelConfig): Promise<LanguageModel> {
 }
 
 export const SUPPORTED_PROVIDERS = Object.keys(PROVIDER_LOADERS)
+
+// ---------------------------------------------------------------------------
+// Adaptive model routing
+// ---------------------------------------------------------------------------
+
+/** The slice of a generation result a routing predicate may inspect. */
+export interface RoutingResult {
+  text: string
+  finishReason: string
+  usage: { promptTokens: number; completionTokens: number; totalTokens: number }
+}
+
+export interface ModelTier {
+  model: ModelConfig
+  /**
+   * Accept this tier's result? Return `false` to escalate to the next tier.
+   * Omitted (or on the last tier) means always accept. Use it to encode a
+   * confidence/quality gate — e.g. reject empty output, refusals, or failed
+   * validation so a stronger model is only paid for when needed.
+   */
+  accept?: (result: RoutingResult) => boolean
+}
+
+/** A tiered model policy understood by `Agent.generate`. */
+export interface ModelRouter {
+  readonly __redtumaRouter: true
+  tiers: ModelTier[]
+  onEscalate?: (info: { from: number; to: number }) => void
+}
+
+/**
+ * Build an adaptive, cost-aware model policy: try the cheapest tier first and
+ * escalate to a stronger model only when a tier's `accept` predicate rejects
+ * the result. The last tier is always accepted.
+ *
+ * ```ts
+ * model: tieredModel({
+ *   tiers: [
+ *     { model: 'anthropic/claude-haiku-4-5', accept: (r) => r.text.length > 0 },
+ *     { model: 'anthropic/claude-opus-4-8' },
+ *   ],
+ * })
+ * ```
+ */
+export function tieredModel(config: {
+  tiers: ModelTier[]
+  onEscalate?: (info: { from: number; to: number }) => void
+}): ModelRouter {
+  if (config.tiers.length === 0) {
+    throw new RedtumaModelError('tieredModel requires at least one tier.')
+  }
+  return { __redtumaRouter: true, tiers: config.tiers, onEscalate: config.onEscalate }
+}
+
+export function isModelRouter(value: ModelConfig | ModelRouter): value is ModelRouter {
+  return typeof value === 'object' && value !== null && '__redtumaRouter' in value
+}

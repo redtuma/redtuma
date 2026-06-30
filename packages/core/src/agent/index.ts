@@ -3,10 +3,9 @@ import {
   streamText,
   generateObject,
   type CoreMessage,
-  type LanguageModel,
 } from 'ai'
 import type { z } from 'zod'
-import { resolveModel } from '../llm'
+import { resolveModel, isModelRouter, type ModelRouter } from '../llm'
 import { buildToolset, type AnyToolAction } from '../tools'
 import { MessageList } from '../message-list'
 import { RuntimeContext, type DynamicArgument, type Logger, type ModelConfig } from '../types'
@@ -32,7 +31,8 @@ export interface AgentConfig {
   id: string
   name?: string
   instructions: DynamicArgument<string>
-  model: ModelConfig
+  /** A single model, or a `tieredModel(...)` policy for adaptive cost routing. */
+  model: ModelConfig | ModelRouter
   tools?: Record<string, AnyToolAction>
   memory?: AgentMemory
   defaultGenerateOptions?: Partial<GenerateOptions>
@@ -63,6 +63,8 @@ export interface GenerateResult<T = unknown> {
   usage: { promptTokens: number; completionTokens: number; totalTokens: number }
   finishReason: string
   response: unknown
+  /** Present when a `tieredModel` policy chose this result. */
+  routing?: { tier: number; attempts: number }
 }
 
 export class Agent {
@@ -94,7 +96,6 @@ export class Agent {
     input: string | CoreMessage[],
     options: GenerateOptions,
   ): Promise<{
-    model: LanguageModel
     system: string
     messages: CoreMessage[]
     tools: ReturnType<typeof buildToolset>
@@ -103,7 +104,6 @@ export class Agent {
   }> {
     const opts = { ...this.config.defaultGenerateOptions, ...options }
     const runtimeContext = opts.runtimeContext ?? new RuntimeContext()
-    const model = await resolveModel(this.config.model)
 
     let system = await this.resolveInstructions(runtimeContext)
     const list = new MessageList()
@@ -122,7 +122,6 @@ export class Agent {
     list.add(input)
 
     return {
-      model,
       system,
       messages: list.toCore(),
       tools: buildToolset(this.config.tools, runtimeContext),
@@ -151,12 +150,14 @@ export class Agent {
     })
   }
 
-  async generate<T = unknown>(
-    input: string | CoreMessage[],
-    options: GenerateOptions = {},
+  /** Run one model (no routing, no persistence) and shape the result. */
+  private async generateOnce<T>(
+    modelConfig: ModelConfig,
+    prepared: Awaited<ReturnType<Agent['prepare']>>,
+    opts: GenerateOptions,
   ): Promise<GenerateResult<T>> {
-    const { model, system, messages, tools, scope } = await this.prepare(input, options)
-    const opts = { ...this.config.defaultGenerateOptions, ...options }
+    const model = await resolveModel(modelConfig)
+    const { system, messages, tools } = prepared
 
     if (opts.output) {
       const res = await generateObject({
@@ -167,7 +168,6 @@ export class Agent {
         temperature: opts.temperature,
         abortSignal: opts.abortSignal,
       })
-      await this.persist(scope, input, JSON.stringify(res.object))
       return {
         text: JSON.stringify(res.object),
         object: res.object as T,
@@ -190,8 +190,6 @@ export class Agent {
       toolChoice: opts.toolChoice,
       abortSignal: opts.abortSignal,
     })
-    await this.persist(scope, input, res.text)
-
     return {
       text: res.text,
       toolCalls: res.toolCalls,
@@ -203,9 +201,56 @@ export class Agent {
     }
   }
 
-  async stream(input: string | CoreMessage[], options: GenerateOptions = {}) {
-    const { model, system, messages, tools, scope } = await this.prepare(input, options)
+  /** Try tiers cheapest-first, escalating until a tier's `accept` passes. */
+  private async generateRouted<T>(
+    router: ModelRouter,
+    prepared: Awaited<ReturnType<Agent['prepare']>>,
+    opts: GenerateOptions,
+  ): Promise<GenerateResult<T>> {
+    const last = router.tiers.length - 1
+    for (let i = 0; i <= last; i++) {
+      const tier = router.tiers[i]!
+      const result = await this.generateOnce<T>(tier.model, prepared, opts)
+      const accepted =
+        i === last ||
+        !tier.accept ||
+        tier.accept({ text: result.text, finishReason: result.finishReason, usage: result.usage })
+      if (accepted) {
+        result.routing = { tier: i, attempts: i + 1 }
+        return result
+      }
+      router.onEscalate?.({ from: i, to: i + 1 })
+    }
+    // Unreachable: the last tier is always accepted.
+    throw new Error('Model router exhausted all tiers without a result.')
+  }
+
+  async generate<T = unknown>(
+    input: string | CoreMessage[],
+    options: GenerateOptions = {},
+  ): Promise<GenerateResult<T>> {
+    const prepared = await this.prepare(input, options)
     const opts = { ...this.config.defaultGenerateOptions, ...options }
+    const model = this.config.model
+
+    const result = isModelRouter(model)
+      ? await this.generateRouted<T>(model, prepared, opts)
+      : await this.generateOnce<T>(model, prepared, opts)
+
+    await this.persist(prepared.scope, input, result.text)
+    return result
+  }
+
+  async stream(input: string | CoreMessage[], options: GenerateOptions = {}) {
+    const { system, messages, tools, scope } = await this.prepare(input, options)
+    const opts = { ...this.config.defaultGenerateOptions, ...options }
+
+    // Streaming can't inspect a result before committing, so a routed model
+    // streams from its cheapest tier; adaptive escalation applies to generate().
+    const modelConfig = isModelRouter(this.config.model)
+      ? this.config.model.tiers[0]!.model
+      : this.config.model
+    const model = await resolveModel(modelConfig)
 
     const result = streamText({
       model,

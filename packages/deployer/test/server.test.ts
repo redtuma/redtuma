@@ -1,8 +1,20 @@
 import { describe, it, expect } from 'vitest'
 import { MockLanguageModelV1 } from 'ai/test'
-import { Agent, Redtuma, InMemoryStore, createStep, createWorkflow } from '@redtuma/core'
+import { Agent, Redtuma, InMemoryStore, createStep, createWorkflow, tieredModel } from '@redtuma/core'
 import type { LanguageModelV1StreamPart, Store } from '@redtuma/core'
 import { createHonoServer } from '../src/index'
+
+/** A non-streaming model that always returns `text`. */
+function fixedModel(text: string): MockLanguageModelV1 {
+  return new MockLanguageModelV1({
+    doGenerate: async () => ({
+      rawCall: { rawPrompt: null, rawSettings: {} },
+      finishReason: 'stop',
+      usage: { promptTokens: 2, completionTokens: 2 },
+      text,
+    }),
+  })
+}
 
 function streamOf(parts: LanguageModelV1StreamPart[]): ReadableStream<LanguageModelV1StreamPart> {
   return new ReadableStream({
@@ -214,6 +226,32 @@ describe('createHonoServer', () => {
       body: JSON.stringify({ runId: 'does-not-exist', step: 'gate', resumeData: {} }),
     })
     expect(res.status).toBe(404)
+  })
+
+  it('adaptive routing escalates over HTTP and reports the chosen tier', async () => {
+    const routed = new Agent({
+      id: 'routed',
+      instructions: 'x',
+      // Cheap tier returns a low-confidence "LOW"; the gate rejects it and the
+      // request escalates to the stronger tier — all over the HTTP boundary.
+      model: tieredModel({
+        tiers: [
+          { model: fixedModel('LOW'), accept: (r) => r.text !== 'LOW' },
+          { model: fixedModel('HIGH') },
+        ],
+      }),
+    })
+    const app = createHonoServer(new Redtuma({ agents: { routed } }))
+
+    const res = await app.request('/api/agents/routed/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ input: 'hi' }),
+    })
+    expect(res.status).toBe(200)
+    const body = (await res.json()) as { text: string; routing: { tier: number; attempts: number } }
+    expect(body.text).toBe('HIGH')
+    expect(body.routing).toEqual({ tier: 1, attempts: 2 })
   })
 
   it('404 for unknown workflow id', async () => {

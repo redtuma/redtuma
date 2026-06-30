@@ -25,6 +25,16 @@ A model is either a plain string `'provider/model'` or an AI SDK `LanguageModel`
 Unknown providers throw a clear error listing supported prefixes. Provider
 packages are optional peer deps, imported lazily so installing only one works.
 
+### Adaptive routing (`tieredModel`)
+A model may also be a `tieredModel({ tiers })` policy. `Agent.generate` tries
+tiers cheapest-first and escalates to a stronger model only when a tier's
+`accept(result)` predicate rejects the output (empty text, a refusal, failed
+validation, …); the last tier is always accepted. The chosen tier is reported on
+`result.routing = { tier, attempts }`, and an `onEscalate` hook fires per step.
+This is Redtuma's runtime cost optimization — pay for the strong model only when
+the cheap one is not good enough. (Streaming uses the cheapest tier, since a
+stream can't be judged before it commits.)
+
 ## @redtuma/core
 
 ### `Redtuma` (registry/orchestrator)

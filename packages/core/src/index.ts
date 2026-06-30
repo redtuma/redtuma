@@ -27,7 +27,18 @@ export {
   type RunStatus,
   type RunSnapshot,
 } from './workflows'
-export { resolveModel, parseModelString, isLanguageModel, RedtumaModelError, SUPPORTED_PROVIDERS } from './llm'
+export {
+  resolveModel,
+  parseModelString,
+  isLanguageModel,
+  RedtumaModelError,
+  SUPPORTED_PROVIDERS,
+  tieredModel,
+  isModelRouter,
+  type ModelRouter,
+  type ModelTier,
+  type RoutingResult,
+} from './llm'
 export { MessageList, type RedtumaMessage, type MessageInput, type MessageRole } from './message-list'
 export { InMemoryStore, type Store, type Thread, type Resource, type GetMessagesArgs } from './store'
 export { ConsoleLogger, noopLogger, type LogLevel } from './logger'

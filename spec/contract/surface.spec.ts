@@ -17,6 +17,8 @@ describe('@redtuma/core export surface', () => {
     'resolveModel',
     'parseModelString',
     'isLanguageModel',
+    'tieredModel',
+    'isModelRouter',
   ] as const
 
   const constructors = [
