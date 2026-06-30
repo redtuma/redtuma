@@ -1,4 +1,4 @@
-import type { ToolAction } from '@chituma/core'
+import type { ToolAction } from '@redtuma/core'
 import { Client } from '@modelcontextprotocol/sdk/client/index.js'
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js'
@@ -70,7 +70,7 @@ function unwrapToolResult(result: unknown): unknown {
 }
 
 /**
- * Connects to one or more MCP servers and exposes their tools as Chituma
+ * Connects to one or more MCP servers and exposes their tools as Redtuma
  * {@link ToolAction}s. Tool ids are namespaced `${serverName}_${toolName}`.
  */
 export class MCPClient {
@@ -81,7 +81,7 @@ export class MCPClient {
 
   constructor(config: MCPClientConfig) {
     this.servers = config.servers
-    this.name = config.name ?? 'chituma-mcp-client'
+    this.name = config.name ?? 'redtuma-mcp-client'
     this.version = config.version ?? '0.0.1'
   }
 
@@ -101,7 +101,7 @@ export class MCPClient {
 
   /**
    * Connect to every configured server, list its tools, and adapt each into a
-   * Chituma {@link ToolAction}. Input is validated loosely as a passthrough
+   * Redtuma {@link ToolAction}. Input is validated loosely as a passthrough
    * object so the remote server remains the source of truth for its schema.
    */
   async getTools(): Promise<Record<string, ToolAction>> {

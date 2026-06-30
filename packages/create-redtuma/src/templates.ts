@@ -1,4 +1,4 @@
-/** Inline starter-project templates for `npm create chituma`. */
+/** Inline starter-project templates for `npm create redtuma`. */
 
 export function templateFiles(projectName: string): Record<string, string> {
   return {
@@ -9,13 +9,13 @@ export function templateFiles(projectName: string): Record<string, string> {
         private: true,
         type: 'module',
         scripts: {
-          dev: 'chituma dev',
+          dev: 'redtuma dev',
           start: 'node --experimental-strip-types src/index.ts',
         },
         dependencies: {
           '@ai-sdk/anthropic': '^1.2.0',
-          '@chituma/core': 'latest',
-          chituma: 'latest',
+          '@redtuma/core': 'latest',
+          redtuma: 'latest',
           zod: '^3.24.0',
         },
       },
@@ -44,9 +44,9 @@ export function templateFiles(projectName: string): Record<string, string> {
       2,
     )}\n`,
 
-    'src/index.ts': `import { Chituma } from '@chituma/core'
-import { Agent } from '@chituma/core/agent'
-import { createTool } from '@chituma/core/tools'
+    'src/index.ts': `import { Redtuma } from '@redtuma/core'
+import { Agent } from '@redtuma/core/agent'
+import { createTool } from '@redtuma/core/tools'
 import { z } from 'zod'
 
 const getWeather = createTool({
@@ -64,13 +64,13 @@ export const agent = new Agent({
   tools: { getWeather },
 })
 
-// \`chituma dev\` looks for this exported \`chituma\` instance.
-export const chituma = new Chituma({ agents: { assistant: agent } })
+// \`redtuma dev\` looks for this exported \`redtuma\` instance.
+export const redtuma = new Redtuma({ agents: { assistant: agent } })
 `,
 
     'README.md': `# ${projectName}
 
-A Chituma project. Get started:
+A Redtuma project. Get started:
 
 \`\`\`bash
 npm install

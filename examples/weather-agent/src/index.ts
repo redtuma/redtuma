@@ -1,12 +1,12 @@
 /**
- * Runnable reference agent. Demonstrates @chituma/core end-to-end:
+ * Runnable reference agent. Demonstrates @redtuma/core end-to-end:
  * an agent that reasons, calls a tool, and streams a response.
  *
- *   ANTHROPIC_API_KEY=sk-... pnpm --filter @chituma/example-weather-agent start
+ *   ANTHROPIC_API_KEY=sk-... pnpm --filter @redtuma/example-weather-agent start
  */
-import { Chituma } from '@chituma/core'
-import { Agent } from '@chituma/core/agent'
-import { createTool } from '@chituma/core/tools'
+import { Redtuma } from '@redtuma/core'
+import { Agent } from '@redtuma/core/agent'
+import { createTool } from '@redtuma/core/tools'
 import { z } from 'zod'
 
 const getWeather = createTool({
@@ -34,7 +34,7 @@ const agent = new Agent({
   tools: { getWeather },
 })
 
-export const chituma = new Chituma({ agents: { weatherAssistant: agent } })
+export const redtuma = new Redtuma({ agents: { weatherAssistant: agent } })
 
 async function main() {
   if (!process.env.ANTHROPIC_API_KEY) {

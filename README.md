@@ -1,17 +1,17 @@
-# Chituma (赤兔马)
+# Redtuma (赤兔马)
 
 The modern TypeScript framework for AI-powered applications and agents.
 
-Chituma gives you the high-level primitives for production AI — **agents** that
+Redtuma gives you the high-level primitives for production AI — **agents** that
 reason and call tools, **workflows** for multi-step orchestration, **memory**,
 **RAG**, **observability**, and **MCP** — on top of the
 [Vercel AI SDK](https://sdk.vercel.ai). It is a clean-room TypeScript
 reimplementation of the [Mastra](https://mastra.ai) API surface.
 
 ```ts
-import { Chituma } from '@chituma/core'
-import { Agent } from '@chituma/core/agent'
-import { createTool } from '@chituma/core/tools'
+import { Redtuma } from '@redtuma/core'
+import { Agent } from '@redtuma/core/agent'
+import { createTool } from '@redtuma/core/tools'
 import { z } from 'zod'
 
 const weather = createTool({
@@ -29,7 +29,7 @@ const agent = new Agent({
   tools: { weather },
 })
 
-export const chituma = new Chituma({ agents: { assistant: agent } })
+export const redtuma = new Redtuma({ agents: { assistant: agent } })
 
 const res = await agent.generate('What is the weather in Taipei?')
 console.log(res.text)
@@ -39,13 +39,13 @@ console.log(res.text)
 
 | Package | Description |
 | --- | --- |
-| `@chituma/core` | `Chituma` registry, `Agent`, tools, model routing, workflows engine |
-| `@chituma/memory` | working / semantic / observational memory |
-| `@chituma/rag` | chunking, embeddings, retrieval |
-| `@chituma/observability` | OpenTelemetry tracing |
-| `@chituma/mcp` | Model Context Protocol client + server |
-| `@chituma/deployer` | server adapters + deploy targets |
-| `@chituma/store-*` | storage & vector adapters (inmemory, libsql, pg, …) |
+| `@redtuma/core` | `Redtuma` registry, `Agent`, tools, model routing, workflows engine |
+| `@redtuma/memory` | working / semantic / observational memory |
+| `@redtuma/rag` | chunking, embeddings, retrieval |
+| `@redtuma/observability` | OpenTelemetry tracing |
+| `@redtuma/mcp` | Model Context Protocol client + server |
+| `@redtuma/deployer` | server adapters + deploy targets |
+| `@redtuma/store-*` | storage & vector adapters (inmemory, libsql, pg, …) |
 
 ## Development
 

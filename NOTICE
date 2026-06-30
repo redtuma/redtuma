@@ -1,12 +1,12 @@
-Chituma (赤兔马)
-Copyright 2026 The Chituma Authors
+Redtuma (赤兔马)
+Copyright 2026 The Redtuma Authors
 
 This product includes software developed independently as a clean-room
 TypeScript reimplementation of the public API surface of the Mastra
-framework (https://mastra.ai). Chituma is not affiliated with, endorsed
+framework (https://mastra.ai). Redtuma is not affiliated with, endorsed
 by, or derived from the Mastra source code. Behavioral conformance tests
 that originate from the Mastra project are adapted as black-box
-specifications only, with import paths rewritten to @chituma/*; verify the
+specifications only, with import paths rewritten to @redtuma/*; verify the
 upstream license of any such file before vendoring it under spec/.
 
 This product builds on the Vercel AI SDK (`ai`) for low-level model and

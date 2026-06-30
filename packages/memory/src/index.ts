@@ -1,10 +1,10 @@
-import { InMemoryStore } from '@chituma/core'
-import type { AgentMemory, ChitumaMessage, CoreMessage, Store } from '@chituma/core'
+import { InMemoryStore } from '@redtuma/core'
+import type { AgentMemory, RedtumaMessage, CoreMessage, Store } from '@redtuma/core'
 
 /**
  * Produces dense numeric embeddings for a batch of texts. Mirrors the AI SDK
- * `embedMany` contract in spirit but is kept self-contained so `@chituma/memory`
- * has no hard dependency on a particular provider or on `@chituma/rag`.
+ * `embedMany` contract in spirit but is kept self-contained so `@redtuma/memory`
+ * has no hard dependency on a particular provider or on `@redtuma/rag`.
  */
 export interface Embedder {
   /** Embed each input text, returning one vector per input (same order). */
@@ -13,7 +13,7 @@ export interface Embedder {
 
 /**
  * Minimal vector index used for semantic recall. Compatible in spirit with the
- * `VectorStore` shape from `@chituma/rag` but defined here to avoid a dependency.
+ * `VectorStore` shape from `@redtuma/rag` but defined here to avoid a dependency.
  */
 export interface VectorStore {
   /** Insert or replace vectors keyed by id, with optional per-vector metadata. */
@@ -92,7 +92,7 @@ function truncate(text: string, max: number): string {
   return text.length <= max ? text : `${text.slice(0, max - 1)}…`
 }
 
-function byCreatedAtAsc(a: ChitumaMessage, b: ChitumaMessage): number {
+function byCreatedAtAsc(a: RedtumaMessage, b: RedtumaMessage): number {
   return a.createdAt.getTime() - b.createdAt.getTime()
 }
 
@@ -157,7 +157,7 @@ export class Memory implements AgentMemory {
       })
     }
 
-    const toSave: ChitumaMessage[] = messages.map((m) => ({
+    const toSave: RedtumaMessage[] = messages.map((m) => ({
       id: genId(),
       role: m.role,
       content: m.content,
@@ -223,8 +223,8 @@ export class Memory implements AgentMemory {
    */
   private async recall(
     threadId: string,
-    recent: ChitumaMessage[],
-  ): Promise<ChitumaMessage[]> {
+    recent: RedtumaMessage[],
+  ): Promise<RedtumaMessage[]> {
     if (!this.embedder || !this.vector) return recent
 
     const all = await this.storage.getMessages({ threadId })
@@ -239,7 +239,7 @@ export class Memory implements AgentMemory {
     const windowIds = new Set(recent.map((m) => m.id))
     const byId = new Map(all.map((m) => [m.id, m] as const))
 
-    const extra: ChitumaMessage[] = []
+    const extra: RedtumaMessage[] = []
     for (const hit of hits) {
       if (windowIds.has(hit.id)) continue
       const msg = byId.get(hit.id)

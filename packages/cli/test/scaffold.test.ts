@@ -7,7 +7,7 @@ import { buildCli } from '../src/index'
 
 const created: string[] = []
 async function tmp() {
-  const d = await mkdtemp(join(tmpdir(), 'chituma-cli-'))
+  const d = await mkdtemp(join(tmpdir(), 'redtuma-cli-'))
   created.push(d)
   return d
 }
@@ -27,10 +27,10 @@ describe('scaffold', () => {
 
     const pkg = JSON.parse(await readFile(join(target, 'package.json'), 'utf8'))
     expect(pkg.name).toBe('my-agent')
-    expect(pkg.dependencies.chituma).toBeDefined()
+    expect(pkg.dependencies.redtuma).toBeDefined()
 
     const entry = await readFile(join(target, 'src/index.ts'), 'utf8')
-    expect(entry).toContain('export const chituma')
+    expect(entry).toContain('export const redtuma')
   })
 
   it('honours an explicit project name', async () => {

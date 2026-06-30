@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { MockLanguageModelV1 } from 'ai/test'
-import { Agent, Chituma, createStep, createWorkflow } from '@chituma/core'
+import { Agent, Redtuma, createStep, createWorkflow } from '@redtuma/core'
 import type { LanguageModelV1StreamPart } from 'ai'
 import { createHonoServer } from '../src/index'
 
@@ -38,7 +38,7 @@ function mockModel(): MockLanguageModelV1 {
   })
 }
 
-function buildChituma(): Chituma {
+function buildRedtuma(): Redtuma {
   const greeter = new Agent({
     id: 'greeter',
     name: 'Greeter',
@@ -61,7 +61,7 @@ function buildChituma(): Chituma {
   })
   const approvalWorkflow = createWorkflow({ id: 'approval' }).then(gate).commit()
 
-  return new Chituma({
+  return new Redtuma({
     agents: { greeter },
     workflows: { inc: incWorkflow, approval: approvalWorkflow },
   })
@@ -69,21 +69,21 @@ function buildChituma(): Chituma {
 
 describe('createHonoServer', () => {
   it('GET / returns ok', async () => {
-    const app = createHonoServer(buildChituma())
+    const app = createHonoServer(buildRedtuma())
     const res = await app.request('/')
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ name: 'chituma', status: 'ok' })
+    expect(await res.json()).toEqual({ name: 'redtuma', status: 'ok' })
   })
 
   it('GET /api/agents lists registered agents', async () => {
-    const app = createHonoServer(buildChituma())
+    const app = createHonoServer(buildRedtuma())
     const res = await app.request('/api/agents')
     expect(res.status).toBe(200)
     expect(await res.json()).toEqual([{ id: 'greeter', name: 'Greeter' }])
   })
 
   it('POST /api/agents/:id/generate returns the model text', async () => {
-    const app = createHonoServer(buildChituma())
+    const app = createHonoServer(buildRedtuma())
     const res = await app.request('/api/agents/greeter/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -95,7 +95,7 @@ describe('createHonoServer', () => {
   })
 
   it('POST /api/agents/:id/stream streams the model text', async () => {
-    const app = createHonoServer(buildChituma())
+    const app = createHonoServer(buildRedtuma())
     const res = await app.request('/api/agents/greeter/stream', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -106,7 +106,7 @@ describe('createHonoServer', () => {
   })
 
   it('returns 404 for an unknown agent id', async () => {
-    const app = createHonoServer(buildChituma())
+    const app = createHonoServer(buildRedtuma())
     const res = await app.request('/api/agents/nope/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -116,14 +116,14 @@ describe('createHonoServer', () => {
   })
 
   it('GET /api/workflows lists registered workflows', async () => {
-    const app = createHonoServer(buildChituma())
+    const app = createHonoServer(buildRedtuma())
     const res = await app.request('/api/workflows')
     expect(res.status).toBe(200)
     expect(await res.json()).toEqual([{ id: 'inc' }, { id: 'approval' }])
   })
 
   it('POST /api/workflows/:id/run returns success + result', async () => {
-    const app = createHonoServer(buildChituma())
+    const app = createHonoServer(buildRedtuma())
     const res = await app.request('/api/workflows/inc/run', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -136,7 +136,7 @@ describe('createHonoServer', () => {
   })
 
   it('suspend -> resume round-trip via runId', async () => {
-    const app = createHonoServer(buildChituma())
+    const app = createHonoServer(buildRedtuma())
 
     const runRes = await app.request('/api/workflows/approval/run', {
       method: 'POST',
@@ -172,7 +172,7 @@ describe('createHonoServer', () => {
   })
 
   it('404 for unknown workflow id', async () => {
-    const app = createHonoServer(buildChituma())
+    const app = createHonoServer(buildRedtuma())
     const res = await app.request('/api/workflows/nope/run', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

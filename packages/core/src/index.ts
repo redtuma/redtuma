@@ -1,4 +1,4 @@
-export { Chituma, type ChitumaConfig } from './chituma'
+export { Redtuma, type RedtumaConfig } from './redtuma'
 export {
   Agent,
   type AgentConfig,
@@ -26,8 +26,8 @@ export {
   type RunResult,
   type RunStatus,
 } from './workflows'
-export { resolveModel, parseModelString, isLanguageModel, ChitumaModelError, SUPPORTED_PROVIDERS } from './llm'
-export { MessageList, type ChitumaMessage, type MessageInput, type MessageRole } from './message-list'
+export { resolveModel, parseModelString, isLanguageModel, RedtumaModelError, SUPPORTED_PROVIDERS } from './llm'
+export { MessageList, type RedtumaMessage, type MessageInput, type MessageRole } from './message-list'
 export { InMemoryStore, type Store, type Thread, type Resource, type GetMessagesArgs } from './store'
 export { ConsoleLogger, noopLogger, type LogLevel } from './logger'
 export { RuntimeContext, type DynamicArgument, type Logger, type ModelConfig, type CoreMessage } from './types'

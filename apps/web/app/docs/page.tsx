@@ -1,13 +1,13 @@
 import { Code, H2 } from '@/components/Code'
 
-export const metadata = { title: 'Docs — Chituma' }
+export const metadata = { title: 'Docs — Redtuma' }
 
 export default function DocsIndex() {
   return (
     <article className="max-w-3xl">
       <h1 className="text-4xl font-bold text-white">Introduction</h1>
       <p className="mt-4 text-lg leading-relaxed text-zinc-400">
-        Chituma is the modern TypeScript framework for AI-powered applications and agents. It
+        Redtuma is the modern TypeScript framework for AI-powered applications and agents. It
         provides the high-level primitives you need in production — agents, tools, workflows,
         memory, RAG, observability and MCP — on top of the Vercel AI SDK.
       </p>
@@ -17,7 +17,7 @@ export default function DocsIndex() {
         An agent combines a model, instructions and tools. Call <code>generate</code> for a
         complete response or <code>stream</code> to stream tokens.
       </p>
-      <Code>{`import { Agent } from '@chituma/core/agent'
+      <Code>{`import { Agent } from '@redtuma/core/agent'
 
 const agent = new Agent({
   id: 'assistant',
@@ -29,7 +29,7 @@ const { text } = await agent.generate('Hello!')`}</Code>
 
       <H2 id="tools">Tools</H2>
       <p className="text-zinc-400">Tools are typed with Zod and called by the agent's loop.</p>
-      <Code>{`import { createTool } from '@chituma/core/tools'
+      <Code>{`import { createTool } from '@redtuma/core/tools'
 import { z } from 'zod'
 
 export const getWeather = createTool({
@@ -44,7 +44,7 @@ export const getWeather = createTool({
         Compose deterministic, multi-step pipelines with branching, parallelism, loops and
         suspend/resume.
       </p>
-      <Code>{`import { createWorkflow, createStep } from '@chituma/core/workflows'
+      <Code>{`import { createWorkflow, createStep } from '@redtuma/core/workflows'
 
 const wf = createWorkflow({ id: 'pipeline' })
   .then(stepA)
@@ -57,11 +57,11 @@ const result = await wf.createRun().start({ inputData: {} })`}</Code>
       <p className="text-zinc-400">
         Attach memory for persistent threads, semantic recall and observational summaries.
       </p>
-      <Code>{`import { Memory } from '@chituma/memory'
-import { LibSQLStore } from '@chituma/store-libsql'
+      <Code>{`import { Memory } from '@redtuma/memory'
+import { LibSQLStore } from '@redtuma/store-libsql'
 
 const memory = new Memory({
-  storage: new LibSQLStore({ url: 'file:./chituma.db' }),
+  storage: new LibSQLStore({ url: 'file:./redtuma.db' }),
   options: { lastMessages: 20, semanticRecall: { topK: 5 } },
 })`}</Code>
     </article>

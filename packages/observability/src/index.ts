@@ -1,12 +1,12 @@
 import { trace, SpanStatusCode } from '@opentelemetry/api'
 import type { Span, Tracer, TracerProvider } from '@opentelemetry/api'
-import type { Agent } from '@chituma/core'
+import type { Agent } from '@redtuma/core'
 
-/** Attribute values accepted by Chituma spans. */
+/** Attribute values accepted by Redtuma spans. */
 export type SpanAttributes = Record<string, string | number | boolean>
 
-/** Default instrumentation scope name for Chituma tracers. */
-export const TRACER_NAME = '@chituma/observability'
+/** Default instrumentation scope name for Redtuma tracers. */
+export const TRACER_NAME = '@redtuma/observability'
 
 /**
  * Register the global OpenTelemetry {@link TracerProvider}. Until a provider is

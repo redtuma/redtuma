@@ -1,5 +1,5 @@
-import type { Agent } from '@chituma/core'
-import { RuntimeContext, createTool } from '@chituma/core'
+import type { Agent } from '@redtuma/core'
+import { RuntimeContext, createTool } from '@redtuma/core'
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js'
 import { describe, expect, it } from 'vitest'
 import { z } from 'zod'

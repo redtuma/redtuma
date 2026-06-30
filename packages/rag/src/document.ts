@@ -27,7 +27,7 @@ const CHARS_PER_TOKEN = 4
 const RECURSIVE_SEPARATORS = ['\n\n', '\n', '. ', '? ', '! ', '; ', ', ', ' ', '']
 
 /**
- * A document loaded into Chituma for retrieval. Construct from raw text and split
+ * A document loaded into Redtuma for retrieval. Construct from raw text and split
  * into {@link Chunk}s ready for embedding.
  */
 export class MDocument {

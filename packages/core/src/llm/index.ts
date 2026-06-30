@@ -11,7 +11,7 @@ type ProviderFactory = (modelId: string) => LanguageModel
 const PROVIDER_LOADERS: Record<string, () => Promise<ProviderFactory>> = {
   anthropic: async () => {
     const mod = await import('@ai-sdk/anthropic').catch(() => {
-      throw new ChitumaModelError(
+      throw new RedtumaModelError(
         `Model provider "anthropic" requires the "@ai-sdk/anthropic" package. Install it with: pnpm add @ai-sdk/anthropic`,
       )
     })
@@ -19,7 +19,7 @@ const PROVIDER_LOADERS: Record<string, () => Promise<ProviderFactory>> = {
   },
   openai: async () => {
     const mod = await import('@ai-sdk/openai').catch(() => {
-      throw new ChitumaModelError(
+      throw new RedtumaModelError(
         `Model provider "openai" requires the "@ai-sdk/openai" package. Install it with: pnpm add @ai-sdk/openai`,
       )
     })
@@ -27,8 +27,8 @@ const PROVIDER_LOADERS: Record<string, () => Promise<ProviderFactory>> = {
   },
 }
 
-export class ChitumaModelError extends Error {
-  override name = 'ChitumaModelError'
+export class RedtumaModelError extends Error {
+  override name = 'RedtumaModelError'
 }
 
 export function isLanguageModel(value: ModelConfig): value is LanguageModel {
@@ -40,7 +40,7 @@ export function isLanguageModel(value: ModelConfig): value is LanguageModel {
 export function parseModelString(model: string): { provider: string; modelId: string } {
   const idx = model.indexOf('/')
   if (idx <= 0 || idx === model.length - 1) {
-    throw new ChitumaModelError(
+    throw new RedtumaModelError(
       `Invalid model string "${model}". Expected "provider/model", e.g. "anthropic/claude-opus-4-8".`,
     )
   }
@@ -57,7 +57,7 @@ export async function resolveModel(model: ModelConfig): Promise<LanguageModel> {
   const { provider, modelId } = parseModelString(model)
   const loader = PROVIDER_LOADERS[provider]
   if (!loader) {
-    throw new ChitumaModelError(
+    throw new RedtumaModelError(
       `Unknown model provider "${provider}". Supported: ${Object.keys(PROVIDER_LOADERS).join(', ')}. ` +
         `Pass an AI SDK LanguageModel directly to use another provider.`,
     )

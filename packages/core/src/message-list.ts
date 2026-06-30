@@ -3,7 +3,7 @@ import type { CoreMessage } from 'ai'
 export type MessageRole = 'system' | 'user' | 'assistant' | 'tool'
 
 /** Canonical persisted message shape. */
-export interface ChitumaMessage {
+export interface RedtumaMessage {
   id: string
   role: MessageRole
   content: CoreMessage['content']
@@ -16,8 +16,8 @@ export type MessageInput =
   | string
   | CoreMessage
   | CoreMessage[]
-  | ChitumaMessage
-  | ChitumaMessage[]
+  | RedtumaMessage
+  | RedtumaMessage[]
 
 let counter = 0
 function genId(): string {
@@ -25,17 +25,17 @@ function genId(): string {
   return `msg_${Date.now().toString(36)}_${counter.toString(36)}`
 }
 
-function isChitumaMessage(m: unknown): m is ChitumaMessage {
+function isRedtumaMessage(m: unknown): m is RedtumaMessage {
   return !!m && typeof m === 'object' && 'createdAt' in m && 'id' in m && 'role' in m
 }
 
 /**
  * Normalizes heterogeneous message inputs (strings, AI SDK CoreMessages,
- * persisted ChitumaMessages) into a single ordered list and converts back to
+ * persisted RedtumaMessages) into a single ordered list and converts back to
  * the AI SDK `CoreMessage[]` shape for model calls.
  */
 export class MessageList {
-  private messages: ChitumaMessage[] = []
+  private messages: RedtumaMessage[] = []
 
   constructor(
     private readonly meta: { threadId?: string; resourceId?: string } = {},
@@ -46,19 +46,19 @@ export class MessageList {
     return this
   }
 
-  private coerce(input: MessageInput, role: MessageRole): ChitumaMessage[] {
+  private coerce(input: MessageInput, role: MessageRole): RedtumaMessage[] {
     if (typeof input === 'string') {
       return [this.wrap({ role, content: input })]
     }
     const arr = Array.isArray(input) ? input : [input]
     return arr.map((m) =>
-      isChitumaMessage(m)
+      isRedtumaMessage(m)
         ? m
         : this.wrap({ role: m.role as MessageRole, content: m.content }),
     )
   }
 
-  private wrap(m: { role: MessageRole; content: CoreMessage['content'] }): ChitumaMessage {
+  private wrap(m: { role: MessageRole; content: CoreMessage['content'] }): RedtumaMessage {
     return {
       id: genId(),
       role: m.role,
@@ -69,11 +69,11 @@ export class MessageList {
     }
   }
 
-  all(): ChitumaMessage[] {
+  all(): RedtumaMessage[] {
     return [...this.messages]
   }
 
-  /** Convert to AI SDK CoreMessage[] (drops chituma-only metadata). */
+  /** Convert to AI SDK CoreMessage[] (drops redtuma-only metadata). */
   toCore(): CoreMessage[] {
     return this.messages.map(
       (m) => ({ role: m.role, content: m.content }) as CoreMessage,

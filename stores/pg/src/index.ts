@@ -3,8 +3,8 @@ import type {
   Resource,
   Store,
   Thread,
-} from '@chituma/core/store'
-import type { ChitumaMessage, MessageRole } from '@chituma/core'
+} from '@redtuma/core/store'
+import type { RedtumaMessage, MessageRole } from '@redtuma/core'
 
 /**
  * Minimal query interface shared by `pg.Pool`, `pg.Client` and `PGlite`.
@@ -19,10 +19,10 @@ export type PgStoreOptions =
   | { connectionString: string; client?: never }
   | { client: SqlExecutor; connectionString?: never }
 
-const THREADS = 'chituma_threads'
-const MESSAGES = 'chituma_messages'
-const RESOURCES = 'chituma_resources'
-const SNAPSHOTS = 'chituma_snapshots'
+const THREADS = 'redtuma_threads'
+const MESSAGES = 'redtuma_messages'
+const RESOURCES = 'redtuma_resources'
+const SNAPSHOTS = 'redtuma_snapshots'
 
 /** Serialize a JSON value for a jsonb column, mapping `undefined` to NULL. */
 function toJson(value: unknown): string | null {
@@ -189,7 +189,7 @@ export class PgStore implements Store {
 
   // ── messages ─────────────────────────────────────────────────────────────
 
-  async saveMessages(messages: ChitumaMessage[]): Promise<ChitumaMessage[]> {
+  async saveMessages(messages: RedtumaMessage[]): Promise<RedtumaMessage[]> {
     await this.init()
     if (messages.length === 0) return messages
 
@@ -226,7 +226,7 @@ export class PgStore implements Store {
     return messages
   }
 
-  async getMessages({ threadId, last }: GetMessagesArgs): Promise<ChitumaMessage[]> {
+  async getMessages({ threadId, last }: GetMessagesArgs): Promise<RedtumaMessage[]> {
     await this.init()
     let rows: any[]
     if (typeof last === 'number') {
@@ -251,11 +251,11 @@ export class PgStore implements Store {
     return rows.map((r) => this.rowToMessage(r))
   }
 
-  private rowToMessage(row: any): ChitumaMessage {
+  private rowToMessage(row: any): RedtumaMessage {
     return {
       id: row.id,
       role: row.role as MessageRole,
-      content: parseJson<ChitumaMessage['content']>(row.content) as ChitumaMessage['content'],
+      content: parseJson<RedtumaMessage['content']>(row.content) as RedtumaMessage['content'],
       createdAt: reviveDate(row.created_at),
       threadId: row.thread_id ?? undefined,
       resourceId: row.resource_id ?? undefined,

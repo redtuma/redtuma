@@ -1,4 +1,4 @@
-import type { ChitumaMessage } from '../message-list'
+import type { RedtumaMessage } from '../message-list'
 
 export interface Thread {
   id: string
@@ -29,8 +29,8 @@ export interface Store {
   getThreadsByResourceId(resourceId: string): Promise<Thread[]>
   deleteThread(id: string): Promise<void>
   // messages
-  saveMessages(messages: ChitumaMessage[]): Promise<ChitumaMessage[]>
-  getMessages(args: GetMessagesArgs): Promise<ChitumaMessage[]>
+  saveMessages(messages: RedtumaMessage[]): Promise<RedtumaMessage[]>
+  getMessages(args: GetMessagesArgs): Promise<RedtumaMessage[]>
   // working memory / resources
   getResource(id: string): Promise<Resource | null>
   saveResource(resource: Resource): Promise<Resource>
@@ -42,7 +42,7 @@ export interface Store {
 /** Default ephemeral store. Useful for tests and quick starts. */
 export class InMemoryStore implements Store {
   private threads = new Map<string, Thread>()
-  private messages = new Map<string, ChitumaMessage[]>()
+  private messages = new Map<string, RedtumaMessage[]>()
   private resources = new Map<string, Resource>()
   private snapshots = new Map<string, unknown>()
 
@@ -62,7 +62,7 @@ export class InMemoryStore implements Store {
     this.messages.delete(id)
   }
 
-  async saveMessages(messages: ChitumaMessage[]): Promise<ChitumaMessage[]> {
+  async saveMessages(messages: RedtumaMessage[]): Promise<RedtumaMessage[]> {
     for (const m of messages) {
       if (!m.threadId) continue
       const list = this.messages.get(m.threadId) ?? []
@@ -71,7 +71,7 @@ export class InMemoryStore implements Store {
     }
     return messages
   }
-  async getMessages({ threadId, last }: GetMessagesArgs): Promise<ChitumaMessage[]> {
+  async getMessages({ threadId, last }: GetMessagesArgs): Promise<RedtumaMessage[]> {
     const list = this.messages.get(threadId) ?? []
     return typeof last === 'number' ? list.slice(-last) : [...list]
   }

@@ -6,7 +6,7 @@ import { scaffold, parseTarget } from '../src/index'
 
 const created: string[] = []
 async function tmp() {
-  const d = await mkdtemp(join(tmpdir(), 'create-chituma-'))
+  const d = await mkdtemp(join(tmpdir(), 'create-redtuma-'))
   created.push(d)
   return d
 }
@@ -16,10 +16,10 @@ afterEach(async () => {
 
 describe('parseTarget', () => {
   it('reads the directory argument', () => {
-    expect(parseTarget(['node', 'create-chituma', 'my-app'])).toBe('my-app')
+    expect(parseTarget(['node', 'create-redtuma', 'my-app'])).toBe('my-app')
   })
   it('ignores flags and falls back to a default', () => {
-    expect(parseTarget(['node', 'create-chituma', '--yes'])).toBe('my-chituma-app')
+    expect(parseTarget(['node', 'create-redtuma', '--yes'])).toBe('my-redtuma-app')
   })
 })
 
@@ -32,8 +32,8 @@ describe('scaffold', () => {
       expect.arrayContaining(['package.json', 'src/index.ts', '.env.example', 'tsconfig.json', 'README.md']),
     )
     const pkg = JSON.parse(await readFile(join(target, 'package.json'), 'utf8'))
-    expect(pkg.dependencies.chituma).toBeDefined()
-    expect(await readFile(join(target, 'src/index.ts'), 'utf8')).toContain('export const chituma')
+    expect(pkg.dependencies.redtuma).toBeDefined()
+    expect(await readFile(join(target, 'src/index.ts'), 'utf8')).toContain('export const redtuma')
   })
 
   it('refuses a non-empty directory', async () => {

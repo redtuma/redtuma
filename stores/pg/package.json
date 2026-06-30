@@ -1,7 +1,7 @@
 {
-  "name": "@chituma/store-pg",
+  "name": "@redtuma/store-pg",
   "version": "0.1.0",
-  "description": "Chituma PostgreSQL store adapter.",
+  "description": "Redtuma PostgreSQL store adapter.",
   "license": "Apache-2.0",
   "type": "module",
   "sideEffects": false,
@@ -21,7 +21,7 @@
     "clean": "rm -rf dist .turbo"
   },
   "dependencies": {
-    "@chituma/core": "workspace:*",
+    "@redtuma/core": "workspace:*",
     "pg": "^8.13.0"
   },
   "devDependencies": {
@@ -30,17 +30,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chituma-ai/chituma.git",
+    "url": "git+https://github.com/redtuma-ai/redtuma.git",
     "directory": "stores/pg"
   },
-  "homepage": "https://chituma.ai",
-  "bugs": "https://github.com/chituma-ai/chituma/issues",
+  "homepage": "https://redtuma.ai",
+  "bugs": "https://github.com/redtuma-ai/redtuma/issues",
   "keywords": [
     "ai",
     "agents",
     "llm",
     "typescript",
-    "chituma",
+    "redtuma",
     "vercel-ai-sdk"
   ]
 }

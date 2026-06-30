@@ -1,6 +1,6 @@
 import { Code, H2 } from '@/components/Code'
 
-export const metadata = { title: 'Quickstart — Chituma' }
+export const metadata = { title: 'Quickstart — Redtuma' }
 
 export default function Quickstart() {
   return (
@@ -11,18 +11,18 @@ export default function Quickstart() {
       </p>
 
       <H2 id="install">1. Create a project</H2>
-      <Code>{`npm create chituma@latest my-agent
+      <Code>{`npm create redtuma@latest my-agent
 cd my-agent
 npm install`}</Code>
 
       <H2 id="key">2. Add your model key</H2>
-      <p className="text-zinc-400">Chituma reads provider keys from the environment.</p>
+      <p className="text-zinc-400">Redtuma reads provider keys from the environment.</p>
       <Code>{`export ANTHROPIC_API_KEY=sk-ant-...`}</Code>
 
       <H2 id="agent">3. Define an agent</H2>
-      <Code>{`import { Chituma } from '@chituma/core'
-import { Agent } from '@chituma/core/agent'
-import { createTool } from '@chituma/core/tools'
+      <Code>{`import { Redtuma } from '@redtuma/core'
+import { Agent } from '@redtuma/core/agent'
+import { createTool } from '@redtuma/core/tools'
 import { z } from 'zod'
 
 const getWeather = createTool({
@@ -39,7 +39,7 @@ export const agent = new Agent({
   tools: { getWeather },
 })
 
-export const chituma = new Chituma({ agents: { assistant: agent } })`}</Code>
+export const redtuma = new Redtuma({ agents: { assistant: agent } })`}</Code>
 
       <H2 id="run">4. Run it</H2>
       <Code>{`const res = await agent.generate('What is the weather in Taipei?')
@@ -51,9 +51,9 @@ for await (const chunk of stream.textStream) process.stdout.write(chunk)`}</Code
 
       <H2 id="serve">5. Serve over HTTP</H2>
       <Code>{`import { serve } from '@hono/node-server'
-import { createHonoServer } from '@chituma/deployer'
+import { createHonoServer } from '@redtuma/deployer'
 
-serve({ fetch: createHonoServer(chituma).fetch, port: 3000 })`}</Code>
+serve({ fetch: createHonoServer(redtuma).fetch, port: 3000 })`}</Code>
 
       <p className="mt-10 text-zinc-400">
         That's it — you now have a production-ready agent with tools, streaming and an HTTP API.

@@ -1,7 +1,7 @@
 {
-  "name": "chituma",
-  "version": "0.1.0",
-  "description": "Chituma CLI: scaffold, dev server and build for Chituma projects.",
+  "name": "redtuma",
+  "version": "0.1.2",
+  "description": "Redtuma CLI: scaffold, dev server and build for Redtuma projects.",
   "license": "Apache-2.0",
   "type": "module",
   "files": [
@@ -10,7 +10,7 @@
     "templates"
   ],
   "bin": {
-    "chituma": "./bin/chituma.mjs"
+    "redtuma": "./bin/redtuma.mjs"
   },
   "exports": {
     ".": {
@@ -25,25 +25,25 @@
     "clean": "rm -rf dist .turbo"
   },
   "dependencies": {
-    "@chituma/core": "workspace:*",
-    "@chituma/deployer": "workspace:*",
+    "@redtuma/core": "workspace:*",
+    "@redtuma/deployer": "workspace:*",
     "@hono/node-server": "^1.13.0",
     "cac": "^6.7.14",
     "hono": "^4.6.0"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chituma-ai/chituma.git",
+    "url": "git+https://github.com/redtuma-ai/redtuma.git",
     "directory": "packages/cli"
   },
-  "homepage": "https://chituma.ai",
-  "bugs": "https://github.com/chituma-ai/chituma/issues",
+  "homepage": "https://redtuma.ai",
+  "bugs": "https://github.com/redtuma-ai/redtuma/issues",
   "keywords": [
     "ai",
     "agents",
     "llm",
     "typescript",
-    "chituma",
+    "redtuma",
     "vercel-ai-sdk"
   ]
 }

@@ -16,7 +16,7 @@ const FEATURES: Feature[] = [
     label: 'Agents',
     title: 'Agents that reason and call tools',
     body: 'Give an agent instructions, a model, and tools. It runs a multi-step tool-calling loop and returns text or structured output.',
-    code: `import { Agent } from '@chituma/core/agent'
+    code: `import { Agent } from '@redtuma/core/agent'
 
 const agent = new Agent({
   id: 'support',
@@ -32,7 +32,7 @@ const { text } = await agent.generate('Where is order #4012?')`,
     label: 'Workflows',
     title: 'Deterministic multi-step workflows',
     body: 'Compose steps with a fluent graph API — sequence, branch, parallel, loops — with built-in suspend/resume for human-in-the-loop.',
-    code: `import { createWorkflow, createStep } from '@chituma/core/workflows'
+    code: `import { createWorkflow, createStep } from '@redtuma/core/workflows'
 
 const wf = createWorkflow({ id: 'triage' })
   .then(classify)
@@ -49,11 +49,11 @@ const run = await wf.createRun().start({ inputData: ticket })`,
     label: 'Memory',
     title: 'Working, semantic & observational memory',
     body: 'Persistent threads, semantic recall over past messages, and observational memory that keeps the context window small.',
-    code: `import { Memory } from '@chituma/memory'
-import { LibSQLStore } from '@chituma/store-libsql'
+    code: `import { Memory } from '@redtuma/memory'
+import { LibSQLStore } from '@redtuma/store-libsql'
 
 const memory = new Memory({
-  storage: new LibSQLStore({ url: 'file:./chituma.db' }),
+  storage: new LibSQLStore({ url: 'file:./redtuma.db' }),
   options: { lastMessages: 20, semanticRecall: { topK: 5 } },
 })`,
   },
@@ -62,7 +62,7 @@ const memory = new Memory({
     label: 'Observability',
     title: 'See exactly what your agents do',
     body: 'OpenTelemetry traces across every agent and workflow step — wire it to any OTLP backend, or print spans in dev.',
-    code: `import { instrumentAgent, setTracerProvider } from '@chituma/observability'
+    code: `import { instrumentAgent, setTracerProvider } from '@redtuma/observability'
 
 setTracerProvider(provider)
 const traced = instrumentAgent(agent)

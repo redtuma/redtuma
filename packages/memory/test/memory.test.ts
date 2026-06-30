@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { Agent, InMemoryStore } from '@chituma/core'
-import type { CoreMessage } from '@chituma/core'
+import { Agent, InMemoryStore } from '@redtuma/core'
+import type { CoreMessage } from '@redtuma/core'
 import { MockLanguageModelV1 } from 'ai/test'
 import { Memory, type Embedder, type VectorStore } from '../src/index'
 

@@ -1,8 +1,8 @@
 {
-  "name": "chituma-monorepo",
+  "name": "redtuma-monorepo",
   "version": "0.0.0",
   "private": true,
-  "description": "Chituma (赤兔马) — the modern TypeScript framework for AI-powered applications and agents.",
+  "description": "Redtuma (赤兔马) — the modern TypeScript framework for AI-powered applications and agents.",
   "license": "Apache-2.0",
   "type": "module",
   "packageManager": "pnpm@10.33.0",

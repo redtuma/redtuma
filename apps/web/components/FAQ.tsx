@@ -4,12 +4,12 @@ import { useState } from 'react'
 
 const QA: { q: string; a: string }[] = [
   {
-    q: 'What is Chituma?',
-    a: 'Chituma (赤兔马) is a TypeScript framework for building AI agents and applications. It provides agents, workflows, memory, RAG, observability and MCP support on top of the Vercel AI SDK.',
+    q: 'What is Redtuma?',
+    a: 'Redtuma (赤兔马) is a TypeScript framework for building AI agents and applications. It provides agents, workflows, memory, RAG, observability and MCP support on top of the Vercel AI SDK.',
   },
   {
     q: 'How is it different from calling a model directly?',
-    a: 'Chituma adds the higher-level pieces you need in production: a tool-calling agent loop, durable multi-step workflows with suspend/resume, persistent memory and semantic recall, retrieval, and tracing — so you are not rebuilding them per project.',
+    a: 'Redtuma adds the higher-level pieces you need in production: a tool-calling agent loop, durable multi-step workflows with suspend/resume, persistent memory and semantic recall, retrieval, and tracing — so you are not rebuilding them per project.',
   },
   {
     q: 'Which models does it support?',
@@ -21,7 +21,7 @@ const QA: { q: string; a: string }[] = [
   },
   {
     q: 'Is it open source?',
-    a: 'Yes — Chituma is Apache-2.0 licensed.',
+    a: 'Yes — Redtuma is Apache-2.0 licensed.',
   },
 ]
 

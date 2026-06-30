@@ -1,5 +1,5 @@
 {
-  "name": "@chituma/example-weather-agent",
+  "name": "@redtuma/example-weather-agent",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.2.0",
-    "@chituma/core": "workspace:*",
+    "@redtuma/core": "workspace:*",
     "zod": "^3.24.0"
   },
   "devDependencies": {

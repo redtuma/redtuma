@@ -8,7 +8,7 @@ export interface ScaffoldResult {
   files: string[]
 }
 
-/** Write a starter Chituma project into `targetDir`. Throws if it is non-empty. */
+/** Write a starter Redtuma project into `targetDir`. Throws if it is non-empty. */
 export async function scaffold(targetDir: string, name?: string): Promise<ScaffoldResult> {
   if (existsSync(targetDir)) {
     const entries = await readdir(targetDir)

@@ -1,5 +1,5 @@
-import type { Agent, ToolAction } from '@chituma/core'
-import { RuntimeContext } from '@chituma/core'
+import type { Agent, ToolAction } from '@redtuma/core'
+import { RuntimeContext } from '@redtuma/core'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js'
 import type { Transport } from '@modelcontextprotocol/sdk/shared/transport.js'
@@ -41,7 +41,7 @@ function toCallToolResult(value: unknown): CallToolResult {
 }
 
 /**
- * Serves Chituma {@link ToolAction}s (and optionally {@link Agent}s) over the
+ * Serves Redtuma {@link ToolAction}s (and optionally {@link Agent}s) over the
  * Model Context Protocol. Connect it to any MCP transport via {@link connect}.
  */
 export class MCPServer {
@@ -49,7 +49,7 @@ export class MCPServer {
 
   constructor(config: MCPServerConfig = {}) {
     this.server = new McpServer({
-      name: config.name ?? 'chituma-mcp-server',
+      name: config.name ?? 'redtuma-mcp-server',
       version: config.version ?? '0.0.1',
     })
 

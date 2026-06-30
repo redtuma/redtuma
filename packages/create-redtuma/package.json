@@ -1,7 +1,7 @@
 {
-  "name": "create-chituma",
+  "name": "create-redtuma",
   "version": "0.1.0",
-  "description": "Scaffold a new Chituma project — `npm create chituma@latest`.",
+  "description": "Scaffold a new Redtuma project — `npm create redtuma@latest`.",
   "license": "Apache-2.0",
   "type": "module",
   "files": [
@@ -9,7 +9,7 @@
     "bin"
   ],
   "bin": {
-    "create-chituma": "./bin/create-chituma.mjs"
+    "create-redtuma": "./bin/create-redtuma.mjs"
   },
   "exports": {
     ".": {
@@ -25,17 +25,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chituma-ai/chituma.git",
-    "directory": "packages/create-chituma"
+    "url": "git+https://github.com/redtuma-ai/redtuma.git",
+    "directory": "packages/create-redtuma"
   },
-  "homepage": "https://chituma.ai",
-  "bugs": "https://github.com/chituma-ai/chituma/issues",
+  "homepage": "https://redtuma.ai",
+  "bugs": "https://github.com/redtuma-ai/redtuma/issues",
   "keywords": [
     "ai",
     "agents",
     "llm",
     "typescript",
-    "chituma",
+    "redtuma",
     "vercel-ai-sdk"
   ]
 }

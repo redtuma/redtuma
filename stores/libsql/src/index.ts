@@ -5,8 +5,8 @@ import type {
   Resource,
   Store,
   Thread,
-} from '@chituma/core/store'
-import type { ChitumaMessage, MessageRole } from '@chituma/core'
+} from '@redtuma/core/store'
+import type { RedtumaMessage, MessageRole } from '@redtuma/core'
 
 /** Either connect to a libSQL URL, or reuse an existing client. */
 export type LibSQLStoreConfig =
@@ -15,7 +15,7 @@ export type LibSQLStoreConfig =
 
 /**
  * Persistent {@link Store} backed by libSQL / SQLite. Works against a local
- * file (`file:./chituma.db`), an in-memory database (`:memory:`), or a remote
+ * file (`file:./redtuma.db`), an in-memory database (`:memory:`), or a remote
  * Turso URL with an auth token. Tables are created lazily on first use.
  */
 export class LibSQLStore implements Store {
@@ -44,7 +44,7 @@ export class LibSQLStore implements Store {
   private async createTables(): Promise<void> {
     await this.client.batch(
       [
-        `CREATE TABLE IF NOT EXISTS chituma_threads (
+        `CREATE TABLE IF NOT EXISTS redtuma_threads (
           id TEXT PRIMARY KEY,
           resource_id TEXT NOT NULL,
           title TEXT,
@@ -52,9 +52,9 @@ export class LibSQLStore implements Store {
           created_at TEXT NOT NULL,
           updated_at TEXT NOT NULL
         )`,
-        `CREATE INDEX IF NOT EXISTS idx_chituma_threads_resource
-          ON chituma_threads (resource_id)`,
-        `CREATE TABLE IF NOT EXISTS chituma_messages (
+        `CREATE INDEX IF NOT EXISTS idx_redtuma_threads_resource
+          ON redtuma_threads (resource_id)`,
+        `CREATE TABLE IF NOT EXISTS redtuma_messages (
           id TEXT PRIMARY KEY,
           thread_id TEXT NOT NULL,
           resource_id TEXT,
@@ -62,14 +62,14 @@ export class LibSQLStore implements Store {
           content TEXT NOT NULL,
           created_at TEXT NOT NULL
         )`,
-        `CREATE INDEX IF NOT EXISTS idx_chituma_messages_thread
-          ON chituma_messages (thread_id, created_at)`,
-        `CREATE TABLE IF NOT EXISTS chituma_resources (
+        `CREATE INDEX IF NOT EXISTS idx_redtuma_messages_thread
+          ON redtuma_messages (thread_id, created_at)`,
+        `CREATE TABLE IF NOT EXISTS redtuma_resources (
           id TEXT PRIMARY KEY,
           working_memory TEXT,
           metadata TEXT
         )`,
-        `CREATE TABLE IF NOT EXISTS chituma_snapshots (
+        `CREATE TABLE IF NOT EXISTS redtuma_snapshots (
           key TEXT PRIMARY KEY,
           value TEXT NOT NULL
         )`,
@@ -83,7 +83,7 @@ export class LibSQLStore implements Store {
   async saveThread(thread: Thread): Promise<Thread> {
     await this.init()
     await this.client.execute({
-      sql: `INSERT INTO chituma_threads (id, resource_id, title, metadata, created_at, updated_at)
+      sql: `INSERT INTO redtuma_threads (id, resource_id, title, metadata, created_at, updated_at)
             VALUES (?, ?, ?, ?, ?, ?)
             ON CONFLICT(id) DO UPDATE SET
               resource_id = excluded.resource_id,
@@ -106,7 +106,7 @@ export class LibSQLStore implements Store {
   async getThread(id: string): Promise<Thread | null> {
     await this.init()
     const { rows } = await this.client.execute({
-      sql: `SELECT * FROM chituma_threads WHERE id = ?`,
+      sql: `SELECT * FROM redtuma_threads WHERE id = ?`,
       args: [id],
     })
     const row = rows[0]
@@ -116,7 +116,7 @@ export class LibSQLStore implements Store {
   async getThreadsByResourceId(resourceId: string): Promise<Thread[]> {
     await this.init()
     const { rows } = await this.client.execute({
-      sql: `SELECT * FROM chituma_threads WHERE resource_id = ? ORDER BY created_at ASC`,
+      sql: `SELECT * FROM redtuma_threads WHERE resource_id = ? ORDER BY created_at ASC`,
       args: [resourceId],
     })
     return rows.map(rowToThread)
@@ -126,8 +126,8 @@ export class LibSQLStore implements Store {
     await this.init()
     await this.client.batch(
       [
-        { sql: `DELETE FROM chituma_messages WHERE thread_id = ?`, args: [id] },
-        { sql: `DELETE FROM chituma_threads WHERE id = ?`, args: [id] },
+        { sql: `DELETE FROM redtuma_messages WHERE thread_id = ?`, args: [id] },
+        { sql: `DELETE FROM redtuma_threads WHERE id = ?`, args: [id] },
       ],
       'write',
     )
@@ -135,12 +135,12 @@ export class LibSQLStore implements Store {
 
   // --- messages --------------------------------------------------------------
 
-  async saveMessages(messages: ChitumaMessage[]): Promise<ChitumaMessage[]> {
+  async saveMessages(messages: RedtumaMessage[]): Promise<RedtumaMessage[]> {
     await this.init()
     const stmts = messages
       .filter((m) => m.threadId)
       .map((m) => ({
-        sql: `INSERT INTO chituma_messages (id, thread_id, resource_id, role, content, created_at)
+        sql: `INSERT INTO redtuma_messages (id, thread_id, resource_id, role, content, created_at)
               VALUES (?, ?, ?, ?, ?, ?)
               ON CONFLICT(id) DO UPDATE SET
                 thread_id = excluded.thread_id,
@@ -161,13 +161,13 @@ export class LibSQLStore implements Store {
     return messages
   }
 
-  async getMessages({ threadId, last }: GetMessagesArgs): Promise<ChitumaMessage[]> {
+  async getMessages({ threadId, last }: GetMessagesArgs): Promise<RedtumaMessage[]> {
     await this.init()
     if (typeof last === 'number') {
       // Fetch the most recent N, then re-order ascending for the caller.
       const { rows } = await this.client.execute({
         sql: `SELECT * FROM (
-                SELECT *, rowid AS _rowid FROM chituma_messages WHERE thread_id = ?
+                SELECT *, rowid AS _rowid FROM redtuma_messages WHERE thread_id = ?
                 ORDER BY created_at DESC, _rowid DESC LIMIT ?
               ) ORDER BY created_at ASC, _rowid ASC`,
         args: [threadId, last],
@@ -175,7 +175,7 @@ export class LibSQLStore implements Store {
       return rows.map(rowToMessage)
     }
     const { rows } = await this.client.execute({
-      sql: `SELECT * FROM chituma_messages WHERE thread_id = ?
+      sql: `SELECT * FROM redtuma_messages WHERE thread_id = ?
             ORDER BY created_at ASC, rowid ASC`,
       args: [threadId],
     })
@@ -187,7 +187,7 @@ export class LibSQLStore implements Store {
   async getResource(id: string): Promise<Resource | null> {
     await this.init()
     const { rows } = await this.client.execute({
-      sql: `SELECT * FROM chituma_resources WHERE id = ?`,
+      sql: `SELECT * FROM redtuma_resources WHERE id = ?`,
       args: [id],
     })
     const row = rows[0]
@@ -197,7 +197,7 @@ export class LibSQLStore implements Store {
   async saveResource(resource: Resource): Promise<Resource> {
     await this.init()
     await this.client.execute({
-      sql: `INSERT INTO chituma_resources (id, working_memory, metadata)
+      sql: `INSERT INTO redtuma_resources (id, working_memory, metadata)
             VALUES (?, ?, ?)
             ON CONFLICT(id) DO UPDATE SET
               working_memory = excluded.working_memory,
@@ -216,7 +216,7 @@ export class LibSQLStore implements Store {
   async persistSnapshot(key: string, value: unknown): Promise<void> {
     await this.init()
     await this.client.execute({
-      sql: `INSERT INTO chituma_snapshots (key, value)
+      sql: `INSERT INTO redtuma_snapshots (key, value)
             VALUES (?, ?)
             ON CONFLICT(key) DO UPDATE SET value = excluded.value`,
       args: [key, JSON.stringify(value)],
@@ -226,7 +226,7 @@ export class LibSQLStore implements Store {
   async loadSnapshot<T = unknown>(key: string): Promise<T | null> {
     await this.init()
     const { rows } = await this.client.execute({
-      sql: `SELECT value FROM chituma_snapshots WHERE key = ?`,
+      sql: `SELECT value FROM redtuma_snapshots WHERE key = ?`,
       args: [key],
     })
     const row = rows[0]
@@ -252,12 +252,12 @@ function rowToThread(row: Row): Thread {
   }
 }
 
-function rowToMessage(row: Row): ChitumaMessage {
+function rowToMessage(row: Row): RedtumaMessage {
   const resourceId = row.resource_id as string | null
   return {
     id: row.id as string,
     role: row.role as MessageRole,
-    content: JSON.parse(row.content as string) as ChitumaMessage['content'],
+    content: JSON.parse(row.content as string) as RedtumaMessage['content'],
     createdAt: new Date(row.created_at as string),
     threadId: row.thread_id as string,
     ...(resourceId !== null ? { resourceId } : {}),

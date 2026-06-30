@@ -2,8 +2,8 @@ import { defineConfig } from 'vitest/config'
 import { createRequire } from 'node:module'
 
 // `ai` / `ai/test` are not direct deps of this package; they are installed for
-// `@chituma/core`. Resolve them from core's location so offline tests can build
-// a Chituma backed by MockLanguageModelV1.
+// `@redtuma/core`. Resolve them from core's location so offline tests can build
+// a Redtuma backed by MockLanguageModelV1.
 const coreRequire = createRequire(new URL('../core/package.json', import.meta.url))
 
 export default defineConfig({

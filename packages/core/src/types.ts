@@ -38,7 +38,7 @@ export interface Logger {
   error(msg: string, meta?: unknown): void
 }
 
-/** Shared dependencies injected into components when registered on a Chituma instance. */
+/** Shared dependencies injected into components when registered on a Redtuma instance. */
 export interface SharedDeps {
   logger?: Logger
   storage?: unknown

@@ -6,7 +6,7 @@ import {
   type ReadableSpan,
 } from '@opentelemetry/sdk-trace-base'
 import { SpanStatusCode, trace } from '@opentelemetry/api'
-import { Agent } from '@chituma/core'
+import { Agent } from '@redtuma/core'
 import { setTracerProvider, getTracer, withSpan, Telemetry, instrumentAgent } from '../src/index'
 
 let exporter: InMemorySpanExporter
@@ -31,7 +31,7 @@ function findSpan(name: string): ReadableSpan | undefined {
 
 // Minimal AI SDK v1 language model. We avoid importing `ai/test` because `ai`
 // is not a dependency of this package (it resolves only transitively via
-// @chituma/core's own node_modules at runtime).
+// @redtuma/core's own node_modules at runtime).
 function mockModel(text: string) {
   return {
     specificationVersion: 'v1',
@@ -108,12 +108,12 @@ describe('instrumentAgent', () => {
     const agent = new Agent({
       id: 'assistant',
       instructions: 'You are helpful.',
-      model: mockModel('Hello from chituma') as never,
+      model: mockModel('Hello from redtuma') as never,
     })
     const wrapped = instrumentAgent(agent)
 
     const res = await wrapped.generate('Hi')
-    expect(res.text).toBe('Hello from chituma')
+    expect(res.text).toBe('Hello from redtuma')
 
     const span = findSpan('agent.generate')
     expect(span).toBeDefined()

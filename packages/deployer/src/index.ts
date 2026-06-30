@@ -1,11 +1,11 @@
 import { Hono } from 'hono'
 import { stream } from 'hono/streaming'
 import type {
-  Chituma,
+  Redtuma,
   CoreMessage,
   GenerateOptions,
   Run,
-} from '@chituma/core'
+} from '@redtuma/core'
 
 export interface CreateHonoServerOptions {
   /** Mount all routes under this prefix (e.g. `/api/v1`). */
@@ -29,21 +29,21 @@ interface ResumeBody {
 }
 
 /** Resolve an agent by its `id`, returning undefined instead of throwing. */
-function findAgent(chituma: Chituma, id: string) {
+function findAgent(redtuma: Redtuma, id: string) {
   try {
-    return chituma.getAgentById(id)
+    return redtuma.getAgentById(id)
   } catch {
     return undefined
   }
 }
 
 /** Resolve a workflow by its `id` (not necessarily its registry key). */
-function findWorkflow(chituma: Chituma, id: string) {
-  return Object.values(chituma.getWorkflows()).find((wf) => wf.id === id)
+function findWorkflow(redtuma: Redtuma, id: string) {
+  return Object.values(redtuma.getWorkflows()).find((wf) => wf.id === id)
 }
 
 /**
- * Build a Hono app exposing a Chituma's agents and workflows over HTTP.
+ * Build a Hono app exposing a Redtuma's agents and workflows over HTTP.
  *
  * Routes (all JSON unless noted):
  * - `GET  /`                              health check
@@ -54,7 +54,7 @@ function findWorkflow(chituma: Chituma, id: string) {
  * - `POST /api/workflows/:id/run`         start a workflow run
  * - `POST /api/workflows/:id/resume`      resume a suspended run
  */
-export function createHonoServer(chituma: Chituma, opts: CreateHonoServerOptions = {}): Hono {
+export function createHonoServer(redtuma: Redtuma, opts: CreateHonoServerOptions = {}): Hono {
   const app = opts.basePath ? new Hono().basePath(opts.basePath) : new Hono()
 
   // Suspended/in-flight workflow runs, keyed by a server-issued runId so that
@@ -65,15 +65,15 @@ export function createHonoServer(chituma: Chituma, opts: CreateHonoServerOptions
     return c.json({ error: err instanceof Error ? err.message : String(err) }, 500)
   })
 
-  app.get('/', (c) => c.json({ name: 'chituma', status: 'ok' }))
+  app.get('/', (c) => c.json({ name: 'redtuma', status: 'ok' }))
 
   app.get('/api/agents', (c) => {
-    const agents = Object.values(chituma.getAgents()).map((a) => ({ id: a.id, name: a.name }))
+    const agents = Object.values(redtuma.getAgents()).map((a) => ({ id: a.id, name: a.name }))
     return c.json(agents)
   })
 
   app.post('/api/agents/:id/generate', async (c) => {
-    const agent = findAgent(chituma, c.req.param('id'))
+    const agent = findAgent(redtuma, c.req.param('id'))
     if (!agent) return c.json({ error: `Agent "${c.req.param('id')}" not found.` }, 404)
 
     const body = await c.req.json<GenerateBody>().catch(() => ({}) as GenerateBody)
@@ -87,7 +87,7 @@ export function createHonoServer(chituma: Chituma, opts: CreateHonoServerOptions
   })
 
   app.post('/api/agents/:id/stream', async (c) => {
-    const agent = findAgent(chituma, c.req.param('id'))
+    const agent = findAgent(redtuma, c.req.param('id'))
     if (!agent) return c.json({ error: `Agent "${c.req.param('id')}" not found.` }, 404)
 
     const body = await c.req.json<GenerateBody>().catch(() => ({}) as GenerateBody)
@@ -106,12 +106,12 @@ export function createHonoServer(chituma: Chituma, opts: CreateHonoServerOptions
   })
 
   app.get('/api/workflows', (c) => {
-    const workflows = Object.values(chituma.getWorkflows()).map((wf) => ({ id: wf.id }))
+    const workflows = Object.values(redtuma.getWorkflows()).map((wf) => ({ id: wf.id }))
     return c.json(workflows)
   })
 
   app.post('/api/workflows/:id/run', async (c) => {
-    const workflow = findWorkflow(chituma, c.req.param('id'))
+    const workflow = findWorkflow(redtuma, c.req.param('id'))
     if (!workflow) return c.json({ error: `Workflow "${c.req.param('id')}" not found.` }, 404)
 
     const body = await c.req.json<RunBody>().catch(() => ({}) as RunBody)
@@ -125,7 +125,7 @@ export function createHonoServer(chituma: Chituma, opts: CreateHonoServerOptions
   })
 
   app.post('/api/workflows/:id/resume', async (c) => {
-    const workflow = findWorkflow(chituma, c.req.param('id'))
+    const workflow = findWorkflow(redtuma, c.req.param('id'))
     if (!workflow) return c.json({ error: `Workflow "${c.req.param('id')}" not found.` }, 404)
 
     const body = await c.req.json<ResumeBody>().catch(() => ({}) as ResumeBody)
@@ -150,6 +150,6 @@ export function createHonoServer(chituma: Chituma, opts: CreateHonoServerOptions
 /**
  * Convenience for edge/Workers runtimes: returns the app's `fetch` handler.
  */
-export function toFetchHandler(chituma: Chituma, opts?: CreateHonoServerOptions) {
-  return createHonoServer(chituma, opts).fetch
+export function toFetchHandler(redtuma: Redtuma, opts?: CreateHonoServerOptions) {
+  return createHonoServer(redtuma, opts).fetch
 }

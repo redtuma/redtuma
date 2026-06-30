@@ -10,7 +10,7 @@ export interface ScaffoldResult {
   files: string[]
 }
 
-/** Write a starter Chituma project into `targetDir`. Throws if it is non-empty. */
+/** Write a starter Redtuma project into `targetDir`. Throws if it is non-empty. */
 export async function scaffold(targetDir: string, name?: string): Promise<ScaffoldResult> {
   if (existsSync(targetDir)) {
     const entries = await readdir(targetDir)
@@ -28,19 +28,19 @@ export async function scaffold(targetDir: string, name?: string): Promise<Scaffo
   return { dir: targetDir, files: written.sort() }
 }
 
-/** Parse the target directory from `npm create chituma <dir>` style argv. */
+/** Parse the target directory from `npm create redtuma <dir>` style argv. */
 export function parseTarget(argv: string[]): string {
   const args = argv.slice(2).filter((a) => !a.startsWith('-'))
-  return args[0] ?? 'my-chituma-app'
+  return args[0] ?? 'my-redtuma-app'
 }
 
-/** Entry point invoked by bin/create-chituma.mjs. */
+/** Entry point invoked by bin/create-redtuma.mjs. */
 export async function run(argv: string[] = process.argv): Promise<void> {
   const target = parseTarget(argv)
   const dir = resolve(target)
   try {
     const result = await scaffold(dir)
-    console.log(`\n  Created a new Chituma project in ${result.dir}\n`)
+    console.log(`\n  Created a new Redtuma project in ${result.dir}\n`)
     for (const f of result.files) console.log(`    + ${f}`)
     console.log('\n  Next steps:\n')
     console.log(`    cd ${target}`)

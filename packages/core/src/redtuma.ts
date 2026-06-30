@@ -5,7 +5,7 @@ import type { Store } from './store'
 import { ConsoleLogger } from './logger'
 import type { Logger } from './types'
 
-export interface ChitumaConfig {
+export interface RedtumaConfig {
   agents?: Record<string, Agent>
   workflows?: Record<string, Workflow>
   tools?: Record<string, AnyToolAction>
@@ -18,7 +18,7 @@ export interface ChitumaConfig {
  * Central registry and orchestrator. Wires shared dependencies (logger, memory,
  * storage) into every registered component.
  */
-export class Chituma {
+export class Redtuma {
   #agents: Record<string, Agent>
   #workflows: Record<string, Workflow>
   #tools: Record<string, AnyToolAction>
@@ -26,7 +26,7 @@ export class Chituma {
   #memory?: AgentMemory
   #logger: Logger
 
-  constructor(config: ChitumaConfig = {}) {
+  constructor(config: RedtumaConfig = {}) {
     this.#agents = config.agents ?? {}
     this.#workflows = config.workflows ?? {}
     this.#tools = config.tools ?? {}

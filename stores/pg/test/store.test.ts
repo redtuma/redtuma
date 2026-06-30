@@ -1,6 +1,6 @@
 import { PGlite } from '@electric-sql/pglite'
 import { beforeEach, describe, expect, it } from 'vitest'
-import type { ChitumaMessage, Thread } from '@chituma/core'
+import type { RedtumaMessage, Thread } from '@redtuma/core'
 import { PgStore } from '../src/index'
 
 function makeStore(): PgStore {
@@ -20,7 +20,7 @@ function thread(over: Partial<Thread> = {}): Thread {
   }
 }
 
-function message(over: Partial<ChitumaMessage> = {}): ChitumaMessage {
+function message(over: Partial<RedtumaMessage> = {}): RedtumaMessage {
   return {
     id: 'm1',
     role: 'user',
@@ -146,7 +146,7 @@ describe('PgStore (PGlite)', () => {
       const content = [
         { type: 'text', text: 'hello' },
         { type: 'text', text: 'world' },
-      ] as ChitumaMessage['content']
+      ] as RedtumaMessage['content']
       await store.saveMessages([message({ id: 'arr', content })])
       const [got] = await store.getMessages({ threadId: 't1' })
       expect(got!.content).toEqual(content)

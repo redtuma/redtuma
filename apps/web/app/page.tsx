@@ -4,7 +4,7 @@ import { FeatureTabs } from '@/components/FeatureTabs'
 import { FAQ } from '@/components/FAQ'
 import { Nav, Footer } from '@/components/site'
 
-const INSTALL = 'npm create chituma@latest'
+const INSTALL = 'npm create redtuma@latest'
 
 const CUSTOMERS = ['Replit', 'Sanity', 'SoftBank', 'Vercel', 'Resend', 'Browserbase', 'Cloudflare', 'Neon']
 
@@ -51,7 +51,7 @@ export default function Home() {
             in TypeScript
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-zinc-400">
-            Chituma gives you agents, workflows, memory, RAG, observability and MCP — the
+            Redtuma gives you agents, workflows, memory, RAG, observability and MCP — the
             high-level primitives for real AI applications, on top of the Vercel AI SDK.
           </p>
 

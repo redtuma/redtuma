@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { MockLanguageModelV1 } from 'ai/test'
 import { Agent } from '../src/agent'
-import { Chituma } from '../src/chituma'
+import { Redtuma } from '../src/redtuma'
 
 function mockModel(text: string) {
   return new MockLanguageModelV1({
@@ -19,10 +19,10 @@ describe('Agent', () => {
     const agent = new Agent({
       id: 'assistant',
       instructions: 'You are helpful.',
-      model: mockModel('Hello from chituma') as never,
+      model: mockModel('Hello from redtuma') as never,
     })
     const res = await agent.generate('Hi')
-    expect(res.text).toBe('Hello from chituma')
+    expect(res.text).toBe('Hello from redtuma')
     expect(res.usage.totalTokens).toBe(15)
   })
 
@@ -58,12 +58,12 @@ describe('Agent', () => {
   })
 })
 
-describe('Chituma registry', () => {
+describe('Redtuma registry', () => {
   it('registers and retrieves agents', () => {
     const agent = new Agent({ id: 'a1', instructions: 'x', model: mockModel('y') as never })
-    const chituma = new Chituma({ agents: { a1: agent } })
-    expect(chituma.getAgent('a1')).toBe(agent)
-    expect(chituma.getAgentById('a1')).toBe(agent)
-    expect(() => chituma.getAgent('missing')).toThrow(/not registered/)
+    const redtuma = new Redtuma({ agents: { a1: agent } })
+    expect(redtuma.getAgent('a1')).toBe(agent)
+    expect(redtuma.getAgentById('a1')).toBe(agent)
+    expect(() => redtuma.getAgent('missing')).toThrow(/not registered/)
   })
 })

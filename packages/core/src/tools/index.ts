@@ -20,7 +20,7 @@ export interface ToolAction<
   execute: (ctx: ToolExecuteContext<z.infer<TInputSchema>>) => Promise<unknown> | unknown
 }
 
-/** Define a Chituma tool. The id is used as the tool name presented to the model. */
+/** Define a Redtuma tool. The id is used as the tool name presented to the model. */
 export function createTool<
   TInputSchema extends z.ZodTypeAny,
   TOutputSchema extends z.ZodTypeAny = z.ZodTypeAny,
@@ -62,8 +62,8 @@ export function toAISDKTool(
 }
 
 /**
- * Build the AI SDK tool map from a record of Chituma tools and/or raw AI SDK
- * tools. Chituma `ToolAction`s are adapted; anything else is passed through.
+ * Build the AI SDK tool map from a record of Redtuma tools and/or raw AI SDK
+ * tools. Redtuma `ToolAction`s are adapted; anything else is passed through.
  */
 export function buildToolset(
   tools: Record<string, AnyToolAction | AiTool> | undefined,

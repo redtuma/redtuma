@@ -1,4 +1,4 @@
-# Chituma Architecture (source-of-truth)
+# Redtuma Architecture (source-of-truth)
 
 This document is the canonical design reference. Read it before implementing any
 package. It mirrors the Mastra API surface (clean-room) on the Vercel AI SDK.
@@ -10,14 +10,14 @@ package. It mirrors the Mastra API surface (clean-room) on the Vercel AI SDK.
 2. **AI SDK is the foundation.** `generateText` / `streamText` / `tool` / `embed`
    from `ai`, with provider packages `@ai-sdk/anthropic`, `@ai-sdk/openai`.
 3. **Keep generic primitive names** (`Agent`, `createTool`, `createWorkflow`),
-   rename only the brand registry: `Mastra` → `Chituma`, scope `@chituma/*`.
-4. **Everything is registrable** on the central `Chituma` instance and shares its
+   rename only the brand registry: `Mastra` → `Redtuma`, scope `@redtuma/*`.
+4. **Everything is registrable** on the central `Redtuma` instance and shares its
    config (storage, memory, telemetry, logger).
 
 ## Model routing
 
 A model is either a plain string `'provider/model'` or an AI SDK `LanguageModel`.
-`resolveModel(config)` in `@chituma/core/llm` maps the prefix to a provider:
+`resolveModel(config)` in `@redtuma/core/llm` maps the prefix to a provider:
 
 - `anthropic/*` → `@ai-sdk/anthropic`
 - `openai/*` → `@ai-sdk/openai`
@@ -25,11 +25,11 @@ A model is either a plain string `'provider/model'` or an AI SDK `LanguageModel`
 Unknown providers throw a clear error listing supported prefixes. Provider
 packages are optional peer deps, imported lazily so installing only one works.
 
-## @chituma/core
+## @redtuma/core
 
-### `Chituma` (registry/orchestrator)
+### `Redtuma` (registry/orchestrator)
 ```ts
-new Chituma({
+new Redtuma({
   agents?: Record<string, Agent>
   workflows?: Record<string, Workflow>
   tools?: Record<string, ToolAction>
@@ -74,14 +74,14 @@ createTool({
 }) → ToolAction
 ```
 `toAISDKTool(tool)` adapts a `ToolAction` to the AI SDK `tool()` shape
-(`parameters`, `execute`). Chituma tools and raw AI SDK tools both accepted.
+(`parameters`, `execute`). Redtuma tools and raw AI SDK tools both accepted.
 
 ### MessageList
 Normalizes strings / `CoreMessage` / UI messages into a canonical
-`ChitumaMessage[]` (`{ id, role, content, createdAt, threadId, resourceId }`),
+`RedtumaMessage[]` (`{ id, role, content, createdAt, threadId, resourceId }`),
 with `.add()`, `.get.all.core()` (→ AI SDK `CoreMessage[]`), `.get.all.v2()`.
 
-### Workflows (engine lives in core, may re-export from @chituma/workflows)
+### Workflows (engine lives in core, may re-export from @redtuma/workflows)
 ```ts
 createWorkflow({ id, inputSchema, outputSchema })
   .then(step).branch([[cond, step]]).parallel([...]).dountil(step, cond)
@@ -92,7 +92,7 @@ createStep({ id, inputSchema, outputSchema, execute, resumeSchema?, suspendSchem
 'success'|'suspended'|'failed', result?, suspended?, steps }`; `run.resume({
 step, resumeData })`. Default in-memory execution engine; pluggable later.
 
-## @chituma/store-* (Store interface)
+## @redtuma/store-* (Store interface)
 ```ts
 interface Store {
   // threads
@@ -105,10 +105,10 @@ interface Store {
   persistSnapshot / loadSnapshot
 }
 ```
-`InMemoryStore` ships in `@chituma/core` (default). `@chituma/store-libsql`,
-`@chituma/store-pg` implement the same interface.
+`InMemoryStore` ships in `@redtuma/core` (default). `@redtuma/store-libsql`,
+`@redtuma/store-pg` implement the same interface.
 
-## @chituma/memory
+## @redtuma/memory
 ```ts
 new Memory({ storage?, vector?, embedder?, options?: {
   lastMessages?: number,           // recent history window
@@ -121,25 +121,25 @@ new Memory({ storage?, vector?, embedder?, options?: {
 `{ messages, systemContext }` to splice into the agent prompt. Saves messages +
 embeddings on each turn.
 
-## @chituma/rag
+## @redtuma/rag
 `MDocument.chunk({ strategy, size, overlap })`, `embed(chunks, embedder)`,
 `vector.query({ queryVector, topK })`. Vector stores share a `VectorStore`
 interface (upsert/query/delete) implemented by store packages.
 
-## @chituma/observability
+## @redtuma/observability
 OpenTelemetry tracer wiring; `withSpan(name, fn)` helpers; instruments
 `agent.generate/stream` and workflow steps. No-op tracer by default.
 
-## @chituma/mcp
+## @redtuma/mcp
 `MCPClient({ servers })` exposes remote MCP tools as `ToolAction`s;
 `MCPServer({ tools, agents })` serves local tools over MCP.
 
-## @chituma/deployer
-`createHonoServer(chituma)` exposes REST routes (`/api/agents/:id/generate`,
+## @redtuma/deployer
+`createHonoServer(redtuma)` exposes REST routes (`/api/agents/:id/generate`,
 `/stream`, workflow run/resume). Deploy targets: Node, Bun, Cloudflare Workers.
 
 ## Conventions
 - ESM-only, `type: module`. Build with `tsdown` → `dist/` (+ `.d.ts`).
-- Subpath exports (`@chituma/core/agent`, `/tools`, `/workflows`).
+- Subpath exports (`@redtuma/core/agent`, `/tools`, `/workflows`).
 - Tests: `vitest`, colocated `*.test.ts`. Ported conformance specs under `spec/`.
 - No secrets in code; providers read `ANTHROPIC_API_KEY` / `OPENAI_API_KEY`.

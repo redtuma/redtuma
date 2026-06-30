@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { ChitumaMessage, Resource, Thread } from '@chituma/core'
+import type { RedtumaMessage, Resource, Thread } from '@redtuma/core'
 import { LibSQLStore } from '../src/index'
 
 function freshStore(): LibSQLStore {
@@ -20,7 +20,7 @@ function thread(over: Partial<Thread> = {}): Thread {
   }
 }
 
-function message(over: Partial<ChitumaMessage> = {}): ChitumaMessage {
+function message(over: Partial<RedtumaMessage> = {}): RedtumaMessage {
   return {
     id: 'm1',
     role: 'user',
@@ -124,7 +124,7 @@ describe('LibSQLStore', () => {
   it('round-trips rich message content (parts array)', async () => {
     const store = freshStore()
     await store.saveThread(thread())
-    const content = [{ type: 'text', text: 'hi' }] as ChitumaMessage['content']
+    const content = [{ type: 'text', text: 'hi' }] as RedtumaMessage['content']
     await store.saveMessages([message({ id: 'rich', content })])
 
     const [got] = await store.getMessages({ threadId: 't1' })

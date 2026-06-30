@@ -13,7 +13,7 @@ import { RuntimeContext, type DynamicArgument, type Logger, type ModelConfig } f
 import { noopLogger } from '../logger'
 
 /**
- * Minimal memory contract the Agent depends on. Implemented by `@chituma/memory`.
+ * Minimal memory contract the Agent depends on. Implemented by `@redtuma/memory`.
  * Kept in core so the Agent can integrate memory without a hard dependency.
  */
 export interface AgentMemory {
@@ -79,7 +79,7 @@ export class Agent {
     this.memory = config.memory
   }
 
-  /** Called by the Chituma registry to inject shared deps. */
+  /** Called by the Redtuma registry to inject shared deps. */
   __register(deps: { logger?: Logger; memory?: AgentMemory }): void {
     if (deps.logger) this.logger = deps.logger
     if (!this.memory && deps.memory) this.memory = deps.memory

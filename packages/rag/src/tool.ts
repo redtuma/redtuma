@@ -1,4 +1,4 @@
-import { createTool } from '@chituma/core'
+import { createTool } from '@redtuma/core'
 import { z } from 'zod'
 import type { RagPipeline } from './pipeline'
 
@@ -11,7 +11,7 @@ export interface RagToolOptions {
 }
 
 /**
- * Wrap a {@link RagPipeline} as a Chituma tool so an Agent can retrieve context.
+ * Wrap a {@link RagPipeline} as a Redtuma tool so an Agent can retrieve context.
  * The tool returns the matching chunks with their similarity scores.
  */
 export function createRagTool(rag: RagPipeline, opts: RagToolOptions = {}) {

@@ -6,7 +6,7 @@ export function Logo({ className = '' }: { className?: string }) {
       <span className="grid h-7 w-7 place-items-center rounded-md gradient-ember text-sm font-bold text-white">
         赤
       </span>
-      <span className="text-white">chituma</span>
+      <span className="text-white">redtuma</span>
     </span>
   )
 }
@@ -26,7 +26,7 @@ export function Nav() {
         </nav>
         <div className="flex items-center gap-3">
           <a
-            href="https://github.com/chituma-ai/chituma"
+            href="https://github.com/redtuma-ai/redtuma"
             className="text-sm text-zinc-400 hover:text-white"
           >
             GitHub
@@ -53,7 +53,7 @@ export function Footer() {
         </p>
         <div className="flex gap-6 text-sm text-zinc-400">
           <Link href="/docs" className="hover:text-white">Docs</Link>
-          <a href="https://github.com/chituma-ai/chituma" className="hover:text-white">GitHub</a>
+          <a href="https://github.com/redtuma-ai/redtuma" className="hover:text-white">GitHub</a>
         </div>
       </div>
     </footer>

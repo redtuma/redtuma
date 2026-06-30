@@ -18,16 +18,16 @@ export class ConsoleLogger implements Logger {
   }
 
   debug(msg: string, meta?: unknown): void {
-    if (this.enabled('debug')) console.debug(`[chituma] ${msg}`, meta ?? '')
+    if (this.enabled('debug')) console.debug(`[redtuma] ${msg}`, meta ?? '')
   }
   info(msg: string, meta?: unknown): void {
-    if (this.enabled('info')) console.info(`[chituma] ${msg}`, meta ?? '')
+    if (this.enabled('info')) console.info(`[redtuma] ${msg}`, meta ?? '')
   }
   warn(msg: string, meta?: unknown): void {
-    if (this.enabled('warn')) console.warn(`[chituma] ${msg}`, meta ?? '')
+    if (this.enabled('warn')) console.warn(`[redtuma] ${msg}`, meta ?? '')
   }
   error(msg: string, meta?: unknown): void {
-    if (this.enabled('error')) console.error(`[chituma] ${msg}`, meta ?? '')
+    if (this.enabled('error')) console.error(`[redtuma] ${msg}`, meta ?? '')
   }
 }
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createRag, createRagTool, InMemoryVectorStore, MDocument } from '../src/index'
-import { RuntimeContext } from '@chituma/core'
+import { RuntimeContext } from '@redtuma/core'
 import { fakeEmbedder } from './fake-embedder'
 
 const DOCS = [
