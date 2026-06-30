@@ -6,7 +6,9 @@ Redtuma gives you the high-level primitives for production AI — **agents** tha
 reason and call tools, **workflows** for multi-step orchestration, **memory**,
 **RAG**, **observability**, and **MCP** — on top of the
 [Vercel AI SDK](https://sdk.vercel.ai). It is a clean-room TypeScript
-reimplementation of the [Mastra](https://mastra.ai) API surface.
+reimplementation of the [Mastra](https://mastra.ai) API surface — built
+independently from public docs and observed behavior; see
+[CLEANROOM.md](./CLEANROOM.md).
 
 ```ts
 import { Redtuma } from '@redtuma/core'

@@ -3,11 +3,16 @@ Copyright 2026 The Redtuma Authors
 
 This product includes software developed independently as a clean-room
 TypeScript reimplementation of the public API surface of the Mastra
-framework (https://mastra.ai). Redtuma is not affiliated with, endorsed
-by, or derived from the Mastra source code. Behavioral conformance tests
-that originate from the Mastra project are adapted as black-box
-specifications only, with import paths rewritten to @redtuma/*; verify the
-upstream license of any such file before vendoring it under spec/.
+framework (https://mastra.ai). "Mastra" is referenced nominatively only to
+describe the compatible API shape; Redtuma is not affiliated with, endorsed
+by, sponsored by, or derived from the Mastra source code or trademarks.
+
+All Redtuma source code, tests, and documentation are authored
+independently from public documentation, published type signatures, and
+observed runtime behavior. No Mastra source code, comments, test files, or
+enterprise-licensed (`ee/`) material has been copied, vendored, or
+reimplemented by reading the original implementation. See CLEANROOM.md for
+the development process that maintains this separation.
 
 This product builds on the Vercel AI SDK (`ai`) for low-level model and
 tool-calling primitives, and uses zod, OpenTelemetry, and Hono.
