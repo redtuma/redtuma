@@ -1,0 +1,6 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "redtuma",
+  "pages_build_output_dir": "out",
+  "compatibility_date": "2025-01-01"
+}

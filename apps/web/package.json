@@ -6,9 +6,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "preview": "npx serve out",
+    "deploy": "next build && npx wrangler pages deploy out --project-name redtuma --branch main",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf .next .turbo"
+    "clean": "rm -rf .next .turbo out"
   },
   "dependencies": {
     "next": "^15.1.0",
