@@ -5,6 +5,7 @@ import type {
   CoreMessage,
   GenerateOptions,
   Run,
+  RunSnapshot,
 } from '@redtuma/core'
 
 export interface CreateHonoServerOptions {
@@ -57,9 +58,11 @@ function findWorkflow(redtuma: Redtuma, id: string) {
 export function createHonoServer(redtuma: Redtuma, opts: CreateHonoServerOptions = {}): Hono {
   const app = opts.basePath ? new Hono().basePath(opts.basePath) : new Hono()
 
-  // Suspended/in-flight workflow runs, keyed by a server-issued runId so that
-  // `/resume` can continue the exact same Run instance.
+  // Suspended runs are persisted to the configured Store when one is present, so
+  // `/resume` works across instances and restarts (required for stateless edge
+  // deploys). Without storage we fall back to an in-process Map (single-instance).
   const runs = new Map<string, Run>()
+  const snapshotKey = (workflowId: string, runId: string) => `wf:${workflowId}:run:${runId}`
 
   app.onError((err, c) => {
     return c.json({ error: err instanceof Error ? err.message : String(err) }, 500)
@@ -120,7 +123,11 @@ export function createHonoServer(redtuma: Redtuma, opts: CreateHonoServerOptions
 
     // Hand back a runId so a suspended run can be resumed later.
     const runId = globalThis.crypto.randomUUID()
-    if (result.status === 'suspended') runs.set(runId, run)
+    if (result.status === 'suspended') {
+      const storage = redtuma.getStorage()
+      if (storage) await storage.persistSnapshot(snapshotKey(workflow.id, runId), run.getSnapshot())
+      else runs.set(runId, run)
+    }
     return c.json({ ...result, runId })
   })
 
@@ -132,15 +139,27 @@ export function createHonoServer(redtuma: Redtuma, opts: CreateHonoServerOptions
     if (!body.runId) return c.json({ error: 'Request must include `runId`.' }, 400)
     if (!body.step) return c.json({ error: 'Request must include `step`.' }, 400)
 
-    const run = runs.get(body.runId)
-    if (!run) return c.json({ error: `Run "${body.runId}" not found.` }, 404)
+    const storage = redtuma.getStorage()
+    const key = snapshotKey(workflow.id, body.runId)
+
+    let run: Run | undefined
+    if (storage) {
+      const snapshot = await storage.loadSnapshot<RunSnapshot>(key)
+      if (!snapshot) return c.json({ error: `Run "${body.runId}" not found.` }, 404)
+      run = workflow.createRun().restore(snapshot)
+    } else {
+      run = runs.get(body.runId)
+      if (!run) return c.json({ error: `Run "${body.runId}" not found.` }, 404)
+    }
 
     const result = await run.resume({ step: body.step, resumeData: body.resumeData })
-    if (result.status === 'suspended') {
-      // Still suspended: keep the run available for another resume.
-      return c.json({ ...result, runId: body.runId })
+
+    if (storage) {
+      // Persist the new snapshot if still suspended; otherwise clear it.
+      await storage.persistSnapshot(key, result.status === 'suspended' ? run.getSnapshot() : null)
+    } else if (result.status !== 'suspended') {
+      runs.delete(body.runId)
     }
-    runs.delete(body.runId)
     return c.json({ ...result, runId: body.runId })
   })
 

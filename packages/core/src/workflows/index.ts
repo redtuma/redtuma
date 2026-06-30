@@ -66,7 +66,12 @@ export interface RunResult {
   steps: Record<string, unknown>
 }
 
-interface Snapshot {
+/**
+ * Serializable state of a suspended run. Persist it (via a `Store`) to resume a
+ * workflow on a different server instance / after a restart — required for
+ * stateless edge deployments where the live `Run` object does not survive.
+ */
+export interface RunSnapshot {
   nodeIndex: number
   input: unknown
   results: Record<string, unknown>
@@ -121,12 +126,23 @@ export class Workflow {
 }
 
 export class Run {
-  private snapshot: Snapshot | null = null
+  private snapshot: RunSnapshot | null = null
 
   constructor(
     public readonly workflowId: string,
     private readonly nodes: Node[],
   ) {}
+
+  /** The serializable snapshot of a suspended run, or null if not suspended. */
+  getSnapshot(): RunSnapshot | null {
+    return this.snapshot
+  }
+
+  /** Rehydrate a previously suspended run from a persisted {@link RunSnapshot}. */
+  restore(snapshot: RunSnapshot): this {
+    this.snapshot = snapshot
+    return this
+  }
 
   async start(args: { inputData: unknown; runtimeContext?: RuntimeContext }): Promise<RunResult> {
     const runtimeContext = args.runtimeContext ?? new RuntimeContext()

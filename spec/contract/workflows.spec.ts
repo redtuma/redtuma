@@ -94,6 +94,26 @@ describe('Workflow suspend / resume (human-in-the-loop)', () => {
     await run.start({ inputData: 'x' })
     await expect(run.resume({ step: 'other', resumeData: 'z' })).rejects.toThrow(/suspended step is/)
   })
+
+  it('round-trips a snapshot to resume on a fresh Run (durable resume)', async () => {
+    const workflow = createWorkflow({ id: 'durable' }).then(gate).commit()
+
+    const first = workflow.createRun()
+    const suspended = await first.start({ inputData: 'payload' })
+    expect(suspended.status).toBe('suspended')
+
+    const snapshot = first.getSnapshot()
+    expect(snapshot).toMatchObject({ suspendedStepId: 'gate' })
+
+    // A brand-new Run (no shared state) resumes purely from the snapshot.
+    const second = workflow.createRun().restore(snapshot!)
+    const resumed = await second.resume({ step: 'gate', resumeData: 'approved' })
+    expect(resumed.status).toBe('success')
+    expect(resumed.result).toBe('approved')
+
+    // A completed/never-suspended run has no snapshot.
+    expect(second.getSnapshot()).toBeNull()
+  })
 })
 
 describe('Workflow failure', () => {

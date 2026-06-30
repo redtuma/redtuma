@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { MockLanguageModelV1 } from 'ai/test'
-import { Agent, Redtuma, createStep, createWorkflow } from '@redtuma/core'
-import type { LanguageModelV1StreamPart } from 'ai'
+import { Agent, Redtuma, InMemoryStore, createStep, createWorkflow } from '@redtuma/core'
+import type { LanguageModelV1StreamPart, Store } from '@redtuma/core'
 import { createHonoServer } from '../src/index'
 
 function streamOf(parts: LanguageModelV1StreamPart[]): ReadableStream<LanguageModelV1StreamPart> {
@@ -38,7 +38,7 @@ function mockModel(): MockLanguageModelV1 {
   })
 }
 
-function buildRedtuma(): Redtuma {
+function buildRedtuma(storage?: Store): Redtuma {
   const greeter = new Agent({
     id: 'greeter',
     name: 'Greeter',
@@ -64,6 +64,7 @@ function buildRedtuma(): Redtuma {
   return new Redtuma({
     agents: { greeter },
     workflows: { inc: incWorkflow, approval: approvalWorkflow },
+    ...(storage ? { storage } : {}),
   })
 }
 
@@ -169,6 +170,50 @@ describe('createHonoServer', () => {
     }
     expect(resumeBody.status).toBe('success')
     expect(resumeBody.result.approved).toBe(true)
+  })
+
+  it('persists a suspended run so a SEPARATE instance can resume it', async () => {
+    // Shared storage simulates two stateless workers/isolates backed by one DB
+    // or Durable Object. The live Run never crosses between them.
+    const storage = new InMemoryStore()
+    const app1 = createHonoServer(buildRedtuma(storage))
+    const app2 = createHonoServer(buildRedtuma(storage))
+
+    const runRes = await app1.request('/api/workflows/approval/run', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ inputData: { value: 7 } }),
+    })
+    const runBody = (await runRes.json()) as { status: string; runId: string }
+    expect(runBody.status).toBe('suspended')
+
+    // Resume on app2 — it has no in-memory record of the run, only the Store.
+    const resumeRes = await app2.request('/api/workflows/approval/resume', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ runId: runBody.runId, step: 'gate', resumeData: { approved: true } }),
+    })
+    expect(resumeRes.status).toBe(200)
+    const resumeBody = (await resumeRes.json()) as {
+      status: string
+      result: { approved: boolean; input: { value: number } }
+    }
+    expect(resumeBody.status).toBe('success')
+    expect(resumeBody.result.approved).toBe(true)
+    expect(resumeBody.result.input).toEqual({ value: 7 })
+
+    // Snapshot cleared after completion.
+    expect(await storage.loadSnapshot(`wf:approval:run:${runBody.runId}`)).toBeNull()
+  })
+
+  it('returns 404 resuming an unknown run when storage is configured', async () => {
+    const app = createHonoServer(buildRedtuma(new InMemoryStore()))
+    const res = await app.request('/api/workflows/approval/resume', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ runId: 'does-not-exist', step: 'gate', resumeData: {} }),
+    })
+    expect(res.status).toBe(404)
   })
 
   it('404 for unknown workflow id', async () => {

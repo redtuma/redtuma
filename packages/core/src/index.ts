@@ -25,6 +25,7 @@ export {
   type StepExecuteContext,
   type RunResult,
   type RunStatus,
+  type RunSnapshot,
 } from './workflows'
 export { resolveModel, parseModelString, isLanguageModel, RedtumaModelError, SUPPORTED_PROVIDERS } from './llm'
 export { MessageList, type RedtumaMessage, type MessageInput, type MessageRole } from './message-list'
