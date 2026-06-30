@@ -1,0 +1,49 @@
+{
+  "name": "@redtuma/store-do",
+  "version": "0.1.0",
+  "description": "Redtuma store adapter backed by a Cloudflare Durable Object — edge-native agent memory with no external database.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "@redtuma/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@redtuma/spec": "workspace:*",
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/redtuma/redtuma.git",
+    "directory": "stores/do"
+  },
+  "homepage": "https://redtuma.ai",
+  "bugs": "https://github.com/redtuma/redtuma/issues",
+  "keywords": [
+    "ai",
+    "agents",
+    "llm",
+    "typescript",
+    "redtuma",
+    "cloudflare",
+    "durable-objects",
+    "edge"
+  ]
+}

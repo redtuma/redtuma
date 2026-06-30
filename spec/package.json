@@ -5,6 +5,9 @@
   "description": "Behavioral conformance suite for the Redtuma public API. Independently authored (clean-room); see CLEANROOM.md.",
   "license": "Apache-2.0",
   "type": "module",
+  "exports": {
+    "./store-conformance": "./src/store-conformance.ts"
+  },
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",

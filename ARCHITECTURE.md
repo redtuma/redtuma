@@ -108,7 +108,20 @@ interface Store {
 }
 ```
 `InMemoryStore` ships in `@redtuma/core` (default). `@redtuma/store-libsql`,
-`@redtuma/store-pg` implement the same interface.
+`@redtuma/store-pg`, and `@redtuma/store-do` implement the same interface.
+Adapters prove parity by running `runStoreConformance` (from `@redtuma/spec`)
+against their own factory.
+
+### @redtuma/store-do (edge-native memory)
+`DurableObjectStore` persists the `Store` in a single Cloudflare Durable
+Object's key/value storage — one DO instance per conversation thread, so memory
+is co-located, strongly consistent, hibernates when idle, and needs no external
+database. It depends only on a minimal `KVStorage` interface (a structural
+subset of `DurableObjectStorage`), so `MemoryKVStorage` can stand in for local
+dev/test. `RedtumaMemoryObject` is the base DO class (exposes the store over a
+JSON-RPC `fetch`); `durableObjectStoreClient(stub)` is the `Store` a Worker uses
+to drive it. This is Redtuma's edge-native bet: first-class Workers deployment
+with memory as a Durable Object, not a bolted-on Node adapter.
 
 ## @redtuma/memory
 ```ts

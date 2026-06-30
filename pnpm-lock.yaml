@@ -205,6 +205,25 @@ importers:
         specifier: ^3.24.0
         version: 3.25.76
 
+  stores/do:
+    dependencies:
+      '@redtuma/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+    devDependencies:
+      '@redtuma/spec':
+        specifier: workspace:*
+        version: link:../../spec
+      '@types/node':
+        specifier: ^22.10.0
+        version: 22.20.0
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+      vitest:
+        specifier: ^2.1.0
+        version: 2.1.9(@types/node@22.20.0)
+
   stores/libsql:
     dependencies:
       '@libsql/client':
