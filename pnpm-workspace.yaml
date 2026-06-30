@@ -3,3 +3,4 @@ packages:
   - 'stores/*'
   - 'examples/*'
   - 'apps/*'
+  - 'spec'
