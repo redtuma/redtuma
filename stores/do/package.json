@@ -17,6 +17,7 @@
   "scripts": {
     "build": "tsdown",
     "test": "vitest run",
+    "verify:workerd": "node integration/verify.mjs",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist .turbo"
   },

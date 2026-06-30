@@ -1,0 +1,12 @@
+name = "redtuma-store-do-integration"
+main = "worker.ts"
+compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[durable_objects.bindings]]
+name = "MEMORY"
+class_name = "Memory"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["Memory"]
